@@ -1,38 +1,39 @@
-var express = require('express');
-var app = express();
-const https = require('https');
-var weiboConfig=require('./config/weiboConfig.js');
+const Koa = require('koa')
+const app = new Koa()
+const views = require('koa-views')
+const json = require('koa-json')
+const onerror = require('koa-onerror')
+const bodyparser = require('koa-bodyparser')
+const logger = require('koa-logger')
 
-//解决跨域
-app.all('*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-});
+const index = require('./routes/index')
+const users = require('./routes/users')
 
-app.get('/authorize',function(req,res){
-    https.get(weiboConfig.weiboUrl+'/oauth2/authorize',{
+// error handler
+onerror(app)
 
-    }, (res) => {
-        console.log('状态码：', res.statusCode);
-        console.log('请求头：', res.headers);
-    }).on('error', (e) => {
-        console.error(e);
-    });
-    //返回的json对象
-    var obj = {
-        code: 0,
-        list: [
-            {name: '苹果'},
-            {name: '香蕉'},
-            {name: '梨子'}
-        ]
-    };
+// middlewares
+app.use(bodyparser({
+  enableTypes:['json', 'form', 'text']
+}))
+app.use(json())
+app.use(logger())
+app.use(require('koa-static')(__dirname + '/public'))
 
-    res.jsonp(obj);
-});
-console.log("启动服务器");
-//启动服务，监听一个端口，不要和页面的端口
-app.listen(3030);
+app.use(views(__dirname + '/views', {
+  extension: 'pug'
+}))
+
+// logger
+app.use(async (ctx, next) => {
+  const start = new Date()
+  await next()
+  const ms = new Date() - start
+  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
+})
+
+// routes
+app.use(index.routes(), index.allowedMethods())
+app.use(users.routes(), users.allowedMethods())
+
+module.exports = app
