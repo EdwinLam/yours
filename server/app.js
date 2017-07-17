@@ -23,27 +23,21 @@ app.use(views(__dirname + '/views', {
   extension: 'pug'
 }))
 
-app.use(async function(ctx, next){  //  如果JWT验证失败，返回验证失败信息
-    try {
-        await next();
-    } catch (err) {
-        if (401 === err.status) {
+// Custom 401 handling if you don't want to expose koa-jwt errors to users
+app.use(function(ctx, next){
+    return next().catch((err) => {
+        if (401 == err.status) {
             ctx.status = 401;
-            ctx.body = {
-                success: false,
-                token: null,
-                info: 'Protected resource, use Authorization header to get access'
-            };
+            ctx.body = 'Protected resource, use Authorization header to get access\n';
         } else {
             throw err;
         }
-    }
+    });
 });
 
-router.use('/auth', AuthRoute.routes()); // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
+router.use('/auth', AuthRoute.routes()) // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
 router.use("/api",jwt({secret: 'panda'}),ApiRoute.routes()) // 所有走/api/打头的请求都需要经过jwt验证。
-app.use(AuthRoute.routes(), AuthRoute.allowedMethods())
-app.use(ApiRoute.routes(), ApiRoute.allowedMethods())
+app.use(router.routes())// 将路由规则挂载到Koa上。
 
 // logger
 app.use(async (ctx, next) => {
