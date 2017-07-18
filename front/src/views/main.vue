@@ -65,9 +65,9 @@
                         <Submenu name="1">
                             <template slot="title">
                                 <Icon type="ios-navigate"></Icon>
-                                微博管理
+                                用户管理
                             </template>
-                            <Menu-item name="1-1">选项 1</Menu-item>
+                            <Menu-item name="1-1">用户管理</Menu-item>
                             <Menu-item name="1-2">选项 2</Menu-item>
                             <Menu-item name="1-3">选项 3</Menu-item>
                         </Submenu>
@@ -90,7 +90,9 @@
                     </Menu>
                 </i-col>
                 <i-col span="19">
-                    <div class="layout-content-main">内容区域</div>
+                    <div class="layout-content-main">
+                        <router-view></router-view>
+                    </div>
                 </i-col>
             </Row>
         </div>

@@ -8,6 +8,9 @@ class UserController{
     getUserInfo(ctx){
         ctx.body="获取用户信息"
     }
+    queryUserByPage(ctx){
+
+    }
 }
 
 module.exports =UserController
