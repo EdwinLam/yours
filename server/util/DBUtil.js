@@ -7,6 +7,9 @@ const sequelize = new Sequelize(DBConfig.database, DBConfig.username, DBConfig.p
         max: 5,
         min: 0,
         idle: 30000
+    },
+    define: {
+        timestamps: false // 取消Sequelzie自动给数据表加入时间戳（createdAt以及updatedAt）
     }
 })
 class DBUtil{

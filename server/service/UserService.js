@@ -8,6 +8,18 @@ class UserService extends BaseService{
     constructor() {
         super('../models/ys_user');
     }
+    async createUser(name,password){
+        if(StringUtil.isNull(name)||StringUtil.isNull(password)){
+            return {
+                success:false,
+                userInfo:[],
+                message:"用户名和密码不能为空"
+            }
+        }
+        var salt = bcrypt.genSaltSync(10);
+        password = bcrypt.hashSync(password, salt);
+        return super.create({name:name,password:password})
+    }
     /*
      * 登录
      * @param {String} name 用户名

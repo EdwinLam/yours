@@ -75,16 +75,16 @@
                             .then((res) => {
                                 console.log(res);
                                 if(res.data.success){ // 如果成功
-                                    sessionStorage.setItem('yours-token',res.data.token); // 用sessionStorage把token存下来
+                                    sessionStorage.setItem('yours-token',res.data.token)// 用sessionStorage把token存下来
                                     this.$Message.success('登录成功！');
-                                    this.$router.push('/main') // 进入todolist页面，登录成功
+                                    this.$router.push('/index') // 进入todolist页面，登录成功
                                 }else{
                                     this.$Message.error(res.data.message); // 登录失败，显示提示语
-                                    sessionStorage.setItem('yours-token',null); // 将token清空
+                                    sessionStorage.setItem('yours-token',null) // 将token清空
                                 }
                             }, (err) => {
                                 this.$Message.error('请求错误！')
-                                sessionStorage.setItem('yours-token',null); // 将token清空
+                                sessionStorage.setItem('yours-token',null) // 将token清空
                             })
                     } else {
                         this.$Message.error('表单验证失败!');
