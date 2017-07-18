@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize')
 const DBConfig = require('../config/DBConfig')
-
 const sequelize = new Sequelize(DBConfig.database, DBConfig.username, DBConfig.password, {
     host: DBConfig.host,
     dialect: 'mysql',
@@ -10,14 +9,15 @@ const sequelize = new Sequelize(DBConfig.database, DBConfig.username, DBConfig.p
         idle: 30000
     }
 })
-const DBUtil={
+class DBUtil{
+    constructor() {
+    }
     /*
-    * 获取对应的表操作对象
-    * @param {Object} model 对应的表模型
-    * */
-   getDao:function(model){
-       return sequelize.import(model)
-   }
+     * 获取对应的表操作对象
+     * @param {Object} model 对应的表模型
+     * */
+    static getDao(model){
+        return sequelize.import(model)
+    }
 }
-
 module.exports = DBUtil

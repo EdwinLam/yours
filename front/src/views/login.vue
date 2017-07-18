@@ -61,16 +61,31 @@
                     ],
                     password: [
                         { required: true, message: '请填写密码', trigger: 'blur' },
-                        { type: 'string', min: 6, message: '密码长度不能小于6位', trigger: 'blur' }
+                        { type: 'string', min: 1, message: '密码长度不能小于1位', trigger: 'blur' }
                     ]
                 }
             }
         },
         methods: {
             handleSubmit(name) {
-                this.$refs[name].validate((valid) => {
+                let _this=this;
+                _this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$Message.success('提交成功!');
+                        _this.$http.post('/auth/login', {name:_this.formInline.user,password:_this.formInline.password}) // 将信息发送给后端
+                            .then((res) => {
+                                console.log(res);
+                                if(res.data.success){ // 如果成功
+                                    sessionStorage.setItem('yours-token',res.data.token); // 用sessionStorage把token存下来
+                                    this.$Message.success('登录成功！');
+                                    this.$router.push('/main') // 进入todolist页面，登录成功
+                                }else{
+                                    this.$Message.error(res.data.message); // 登录失败，显示提示语
+                                    sessionStorage.setItem('yours-token',null); // 将token清空
+                                }
+                            }, (err) => {
+                                this.$Message.error('请求错误！')
+                                sessionStorage.setItem('yours-token',null); // 将token清空
+                            })
                     } else {
                         this.$Message.error('表单验证失败!');
                     }

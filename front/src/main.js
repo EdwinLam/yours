@@ -17,6 +17,8 @@ Vue.use(Vuex);
 Vue.use(VueI18n);
 Vue.use(iView);
 
+Vue.prototype.$http = Util.ajax // 类似于vue-resource的调用方法
+
 // 自动设置语言
 const navLang = navigator.language;
 const localLang = (navLang === 'zh-CN' || navLang === 'en-US') ? navLang : false;
@@ -39,10 +41,22 @@ const RouterConfig = {
 };
 const router = new VueRouter(RouterConfig);
 
+
+
+
 router.beforeEach((to, from, next) => {
     iView.LoadingBar.start();
     Util.title(to.meta.title);
-    next();
+    //权限验证
+    const token = sessionStorage.getItem('yours-token');
+    if(token != 'null' && token != null){
+        Vue.prototype.$http.defaults.headers.common['Authorization'] = 'Bearer ' + token; // 注意Bearer后有个空格
+        next()
+    }else if(to.path == '/login'){
+        next()
+    }else{
+        next('/login')
+    }
 });
 
 router.afterEach(() => {

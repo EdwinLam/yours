@@ -1,4 +1,4 @@
-var DBConfig = {
+const DBConfig = {
     database: 'yours', //数据库
     username: 'root', // 用户名
     password: 'root', // 口令

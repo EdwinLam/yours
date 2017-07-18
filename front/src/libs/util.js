@@ -10,23 +10,14 @@ util.title = function(title) {
 };
 
 const ajaxUrl = env === 'development' ?
-    'http://localhost:3030' :
+    'http://localhost:3000' :
     env === 'production' ?
-    'http://localhost:3030' :
-    'http://localhost:3030';
+    'http://localhost:3000' :
+    'http://localhost:3000';
 
 util.ajax = axios.create({
     baseURL: ajaxUrl,
     timeout: 30000
 });
-
-util.ajax.get("/authorize").then(response => {
-    console.log(response)
-    // success callback
-}, response => {
-    console.log(response)
-
-    // error callback
-})
 
 export default util;

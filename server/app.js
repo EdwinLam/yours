@@ -7,6 +7,8 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const jwt=require('koa-jwt')
 const router = require('koa-router')()
+var cors = require('koa2-cors')
+const SystemConfig = require('./config/SystemConfig')
 const ApiRoute = require('./routes/ApiRoute')
 const AuthRoute = require('./routes/AuthRoute')
 
@@ -14,6 +16,7 @@ const AuthRoute = require('./routes/AuthRoute')
 onerror(app)
 
 // middlewares
+app.use(cors())
 app.use(bodyparser())
 app.use(json())
 app.use(logger())
@@ -28,7 +31,7 @@ app.use(function(ctx, next){
     return next().catch((err) => {
         if (401 == err.status) {
             ctx.status = 401;
-            ctx.body = 'Protected resource, use Authorization header to get access\n';
+            ctx.body = '验证失败！无法访问该资源！';
         } else {
             throw err;
         }
@@ -36,7 +39,7 @@ app.use(function(ctx, next){
 });
 
 router.use('/auth', AuthRoute.routes()) // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
-router.use("/api",jwt({secret: 'panda'}),ApiRoute.routes()) // 所有走/api/打头的请求都需要经过jwt验证。
+router.use("/api",jwt({secret: SystemConfig.secret}),ApiRoute.routes()) // 所有走/api/打头的请求都需要经过jwt验证。
 app.use(router.routes())// 将路由规则挂载到Koa上。
 
 // logger
