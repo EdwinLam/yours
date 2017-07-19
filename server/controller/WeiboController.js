@@ -1,41 +1,23 @@
 const SystemConfig=require('../config/SystemConfig')
-const axios =require('axios');
-const qs =require('qs');
+const WeiboUserService =new (require('../service/WeiboUserService'))()
+
 class WeiboController{
     constructor() {
     }
     /*获取微博登录Token*/
     async getAccessToken(ctx) {
-        console.log(ctx.query);
-        var postData= {
-            'grant_type' : 'authorization_code',
-            'code' : ctx.query.code,
-            'redirect_uri' : SystemConfig.weibo_redirect_uri,
-            'client_id':SystemConfig.weibo_client_id,
-            'client_secret':SystemConfig.weibo_client_secret,
-        };
-
-        await axios.post(SystemConfig.weibo_url+"oauth2/access_token",qs.stringify(postData)).then((res) => {
-            ctx.body=res.data
-        }, (err) => {
-            ctx.body=err.response.data
-        })
+        ctx.body=await WeiboUserService.getAccessToken(ctx.query.code);
     }
-    /*获取微博登录Token*/
-    async usersShow(ctx) {
-        var postData= {
-            params: {
-                access_token : ctx.query.token,
-                uid : ctx.query.uid,
-                source:SystemConfig.weibo_client_id
-            }
-
-        };
-        await axios.get(SystemConfig.weibo_url+"2/users/show.json",postData).then((res) => {
-            ctx.body=res.data
-        }, (err) => {
-            ctx.body=err.response.data
-        })
+    /*获取用户信息*/
+     async getUserInfo(ctx) {
+        ctx.body=await WeiboUserService.getUserInfo(ctx.query.token,ctx.query.uid);
+    }
+    /*同步微博用户到本地*/
+    async syncWeiboUser(ctx){
+        //获取token信息
+        const tokenInfo=await WeiboUserService.getAccessToken(ctx.query.code);
+        //获取微博用户
+        const userInfo=await WeiboUserService.getUserInfo(tokenInfo.access_token,tokenInfo.uid);
     }
 }
 

@@ -1,4 +1,5 @@
 const UserService =new (require('../service/UserService'))()
+
 class UserController{
     constructor() {
     }
@@ -19,6 +20,7 @@ class UserController{
     async delete(ctx){
         ctx.body=await UserService.destroy(ctx.params.id);
     }
+
 }
 
 module.exports =UserController
