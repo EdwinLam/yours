@@ -16,6 +16,9 @@ class UserController{
     async create(ctx){
         ctx.body=await UserService.createUser(ctx.request.body.name,ctx.request.body.password)
     }
+    async delete(ctx){
+        ctx.body=await UserService.destroy(ctx.params.id);
+    }
 }
 
 module.exports =UserController

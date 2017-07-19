@@ -1,6 +1,6 @@
 <template>
     <div>
-        <addView></addView>
+        <addView @updateList="queryPage(1)"></addView>
 <Table :data="userItems" :columns="userColumns" stripe></Table>
 <div style="margin: 10px;overflow: hidden">
     <div style="float: right;">
@@ -83,7 +83,20 @@
                 })
             },
             remove (index) {
-                this.userItems.splice(index, 1);
+                this.$Modal.confirm({
+                    title: '确认对话框标题',
+                    content: '<p>是否删除用户'+this.userItems[index].name+'</p>',
+                    onOk: () => {
+                        this.$http.delete("/api/user/"+this.userItems[index].id).then((res) => {
+                            this.userItems.splice(index, 1);
+                        }, (err) => {
+                            this.$Message.error('删除失败！')
+                        })
+                    }
+                });
+
+
+
             },
             queryPage (pageNo) {
                 this.$http.get("/api/user/queryUserByPage", {

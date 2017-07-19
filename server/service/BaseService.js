@@ -6,6 +6,9 @@ class BaseService{
     async findAll() {
         return  await this.UserDao.findAll();
     }
+    async findOne(option){
+        return await this.UserDao.findOne(option);
+    }
     async create(values){
         values.updatedAt=new Date().getTime();
         values.createdAt=new Date().getTime();
@@ -20,6 +23,9 @@ class BaseService{
         result.pageNo=option.pageNo;
         result.pageSize=option.pageSize;
         return result;
+    }
+    async destroy(id){
+        return  await this.UserDao.destroy({where:{id:id}});
     }
 }
 module.exports =BaseService;

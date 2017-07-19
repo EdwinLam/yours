@@ -12,13 +12,20 @@ class UserService extends BaseService{
         if(StringUtil.isNull(name)||StringUtil.isNull(password)){
             return {
                 success:false,
-                userInfo:[],
                 message:"用户名和密码不能为空"
             }
         }
-        var salt = bcrypt.genSaltSync(10);
-        password = bcrypt.hashSync(password, salt);
-        return super.create({name:name,password:password})
+        const user=await this.findOne({where:{name:name}});
+        if(user==null){
+            const salt = bcrypt.genSaltSync(10);
+            password = bcrypt.hashSync(password, salt);
+            return super.create({name:name,password:password})
+        }else{
+            return {
+                success:false,
+                message:"已存在同名用户"
+            }
+        }
     }
     /*
      * 登录

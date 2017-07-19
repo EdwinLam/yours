@@ -11,7 +11,6 @@ util.title = function(title) {
 
 util.formatDate =function(timeStamp) {
     let date=new Date(parseInt(timeStamp));
-    console.log(date);
     const y = date.getFullYear();
     let m = date.getMonth() + 1;
     m = m < 10 ? '0' + m : m;
