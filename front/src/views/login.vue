@@ -31,6 +31,8 @@
                 </h1>
 
                 <div>
+                    <a href="https://api.weibo.com/oauth2/authorize?client_id=2719342288&redirect_uri=http://127.0.0.1:8080/login&response_type=code" target="_blank">微博单点测试</a>
+"
                     <Form ref="formInline" :model="formInline" :rules="ruleInline">
                         <Form-item prop="user">
                             <Input type="text" v-model="formInline.user" icon="ios-person-outline" placeholder="Username"/>
@@ -49,6 +51,23 @@
 </template>
 <script>
     export default {
+        mounted:function(){
+            var weiboCode=this.$route.query.code;
+            if(weiboCode!=null){//微博单点登录
+                this.$http.get('/api/weibo/getAccessToken',  {
+                    params: {code:weiboCode}
+                }).then((res) => {
+                    console.log(res);
+                    sessionStorage.setItem('weibo-token',res.data.access_token)
+                    sessionStorage.setItem('weibo-uid',res.data.uid)
+                }, (err) => {
+                    this.$Message.error('微博单点失败！')
+                    sessionStorage.setItem('weibo-token',null) // 将token清空
+                    sessionStorage.setItem('weibo-uid',null)
+
+                })
+            }
+        },
         data () {
             return {
                 formInline: {

@@ -47,12 +47,12 @@
                     if (valid) {
                         this.$http.post("/api/user/create", {name:this.formValidate.name,password:this.formValidate.password}) .then((res) => {
                             if(res.data.success){
-                                this.modal1=false
                                 this.$emit('updateList')
                                 this.$Message.info('新增成功')
                             }else{
                                 this.$Message.info(res.data.message)
                             }
+                            this.modal1=false;
                         }, (err) => {
                             this.modal1=false;
                             this.$Message.error('查询失败！')
