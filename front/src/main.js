@@ -2,14 +2,13 @@ import Vue from 'vue';
 import iView from 'iview';
 import VueRouter from 'vue-router';
 import Routers from './router';
-import Vuex from 'vuex';
+import store from './store/'
 import Util from './libs/util';
 import App from './app.vue';
 import 'iview/dist/styles/iview.css';
 
 
 Vue.use(VueRouter);
-Vue.use(Vuex);
 Vue.use(iView);
 
 Vue.prototype.$http = Util.ajax
@@ -25,10 +24,11 @@ const router = new VueRouter(RouterConfig);
 router.beforeEach((to, from, next) => {
     iView.LoadingBar.start();
     Util.title(to.meta.title);
+
     //权限验证
-    const token = sessionStorage.getItem('yours-token');
-    if(token != 'null' && token != null){
-        Vue.prototype.$http.defaults.headers.common['Authorization'] = 'Bearer ' + token; // 注意Bearer后有个空格
+    const data=JSON.parse(sessionStorage.getItem('storeData'));
+    if(data != null){
+        Vue.prototype.$http.defaults.headers.common['Authorization'] = 'Bearer ' + data.jwt; // 注意Bearer后有个空格
         next()
     }else if(to.path == '/login'){
         next()
@@ -40,24 +40,6 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
     iView.LoadingBar.finish();
     window.scrollTo(0, 0);
-});
-
-
-const store = new Vuex.Store({
-    state: {
-        count:0
-    },
-    getters: {
-
-    },
-    mutations: {
-        increment (state){
-            state.count++;
-        }
-    },
-    actions: {
-
-    }
 });
 
 

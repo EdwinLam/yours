@@ -64,7 +64,6 @@
                     this.$Message.error('微博单点失败！')
                     sessionStorage.setItem('weibo-token',null) // 将token清空
                     sessionStorage.setItem('weibo-uid',null)
-
                 })
             }
         },
@@ -88,23 +87,18 @@
         methods: {
             handleSubmit(name) {
                 let _this=this;
-                _this.$refs[name].validate((valid) => {
+                _this.$refs[name].validate(async (valid) => {
                     if (valid) {
-                        _this.$http.post('/auth/login', {name:_this.formInline.user,password:_this.formInline.password}) // 将信息发送给后端
-                            .then((res) => {
-                                console.log(res);
-                                if(res.data.success){ // 如果成功
-                                    sessionStorage.setItem('yours-token',res.data.token)// 用sessionStorage把token存下来
-                                    this.$Message.success('登录成功！');
-                                    this.$router.push('/index') // 进入todolist页面，登录成功
-                                }else{
-                                    this.$Message.error(res.data.message); // 登录失败，显示提示语
-                                    sessionStorage.setItem('yours-token',null) // 将token清空
-                                }
-                            }, (err) => {
-                                this.$Message.error('请求错误！')
-                                sessionStorage.setItem('yours-token',null) // 将token清空
-                            })
+                       const isSuccess=await this.$store.dispatch('login', {
+                            name: this.formInline.user,
+                            password: this.formInline.password
+                        })
+                        if(isSuccess){
+                            this.$Message.success('用户身份验证成功！');
+                            this.$router.push('/index') // 进入todolist页面，登录成功
+                        }else{
+                            this.$Message.error(""); // 登录失败，显示提示语
+                        }
                     } else {
                         this.$Message.error('表单验证失败!');
                     }

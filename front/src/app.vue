@@ -4,14 +4,17 @@
     </div>
 </template>
 <script>
+    import { mapGetters } from 'vuex'
+    import * as types from './store/mutation-types'
+
     export default {
         data() {
             return {
 
             };
         },
-        mounted() {
-
+        created() {
+            this.$store.dispatch('restoreData')
         },
         beforeDestroy() {
 
