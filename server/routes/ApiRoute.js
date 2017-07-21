@@ -8,9 +8,6 @@ router.get('/user/queryUserByPage',UserController.queryUserByPage)//分页查询
 router.post('/user/create',UserController.create)//创建用户
 router.del('/user/:id',UserController.delete)//删除用户
 
-/*微博api*/
-router.get('/weibo/getAccessToken',WeiboController.getAccessToken)//获取token
-router.get('/weibo/getUserInfo',WeiboController.getUserInfo)//获取token
-router.get('/weibo/syncWeiboUser',WeiboController.syncWeiboUser)//同步微博用户
+
 
 module.exports = router

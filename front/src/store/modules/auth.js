@@ -1,31 +1,38 @@
 import auth from '../../api/auth'
+import weibo from '../../api/weibo'
+
 import * as types from '../mutation-types'
-import Vue from 'vue';
 
 const state = {
     userInfo: {},
     weiboUserInfo:{},
-    jwt:"",
-    loginStatus: -1,//0-未登录 1-登录成功,
-    loginMessage:""
+    token:""
 }
 
 // getters
 const getters = {
-    loginStatus: state => state.loginStatus,
     jwt:state=>state.jwt,
 }
 
 // actions
 const actions = {
     async login({commit, state}, {name, password}) {
-        console.log(name)
-        commit(types.LOGIN_RESET)
-        const res = await auth.login(name, password);
+        const res = await auth.login(name, password)
         if (res.data.success) {
             commit(types.LOGIN_SUCCESS, res.data)
+            commit(types.ASSISTANT_SHOW_MSG,{msg:'登录成功',type:'success'})
+            commit(types.ASSISTANT_REDIRECT, {path:'/index'})
         } else {
             commit(types.LOGIN_FAILURE, res.data)
+            commit(types.ASSISTANT_SHOW_MSG, {msg:res.data.message,type:'error'} )
+        }
+    },
+    async weiboLogin({commit, state}, {code}) {
+        const res = await weibo.getUserInfo(code)
+        if(res.data.userInfo!=null){
+            commit(types.LOGIN_SUCCESS,{userInfo:res.data.userInfo,token:res.data.token,weiboUserInfo:res.data.weiboUserInfo})
+            commit(types.ASSISTANT_SHOW_MSG,{msg:'登录成功',type:'success'})
+            commit(types.ASSISTANT_REDIRECT, {path:'/index'})
         }
     },
     restoreData({commit, state}){
@@ -34,40 +41,31 @@ const actions = {
             for(let key in data){
                 state[key]  =data[key];
             }
-        }else{
-            commit(types.LOGIN_OUT);
         }
-
     }
-
+}
+const resetParam=function(){
+    state.userInfo={}
+    state.weiboUserInfo={}
+    state.token=''
 }
 
 const mutations = {
-    [types.LOGIN_SUCCESS] (state,{userInfo,token}) {
+    [types.LOGIN_SUCCESS] (state,{userInfo,token,weiboUserInfo}) {
         state.userInfo =userInfo
-        state.jwt=token
-        state.loginStatus=1
+        state.token=token
         state.loginMessage="登录成功"
+        state.weiboUserInfo=weiboUserInfo
         sessionStorage.setItem('storeData',JSON.stringify(state))
     },
 
     [types.LOGIN_FAILURE] (state, { message }) {
-        state.loginStatus=0
-        state.loginMessage=message
-
-    },
-    [types.LOGIN_RESET](state) {
-        sessionStorage.removeItem('storeData');
-        //重置权限相关参数
-        state.userInfo={}
-        state.weiboUserInfo={}
-        state.jwt={}
+        sessionStorage.removeItem('storeData')
+        resetParam()
     },
     [types.LOGIN_OUT](state){
-        state.userInfo={}
-        state.weiboUserInfo={}
-        state.jwt={}
-        state.loginStatus=0;
+        sessionStorage.removeItem('storeData')
+        resetParam()
     }
 }
 

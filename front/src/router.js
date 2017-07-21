@@ -8,6 +8,10 @@ const routers = [
         component: (resolve) => require(['./views/login.vue'], resolve)
     },
     {
+        path: '/weiboLogin',
+        component: (resolve) => require(['./views/weiboLogin.vue'], resolve)
+    },
+    {
         path: '/index',
         component: (resolve) => require(['./views/index.vue'], resolve),
         children: [

@@ -8,7 +8,15 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
+    weiboUid: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
     name: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    phone: {
       type: DataTypes.STRING(255),
       allowNull: true
     },
@@ -21,11 +29,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     createdAt: {
-      type: DataTypes.TEXT,
+      type: DataTypes.BIGINT,
       allowNull: true
     },
     updatedAt: {
-      type: DataTypes.TEXT,
+      type: DataTypes.BIGINT,
       allowNull: true
     }
   }, {

@@ -38,7 +38,7 @@
                         <Form-item prop="password">
                             <Input type="password" v-model="formInline.password" icon="ios-locked-outline" placeholder="Password"/>
                         </Form-item>
-                        <a href="https://api.weibo.com/oauth2/authorize?client_id=2719342288&redirect_uri=http://127.0.0.1:8080/weiboLogin&response_type=code">
+                        <a href="https://api.weibo.com/oauth2/authorize?client_id=2719342288&redirect_uri=http://127.0.0.1:8080/login&response_type=code">
                             <img src="../images/weibo_login.png"/>
                         </a>
                         <Form-item>
@@ -55,7 +55,10 @@
 
     export default {
         mounted:function(){
-
+            var weiboCode=this.$route.query.code;
+            if(weiboCode!=null){//微博单点登录
+                this.weiboLogin({code:weiboCode});
+            }
         },
         data () {
             return {
@@ -76,7 +79,8 @@
         },
         methods: {
             ...mapActions([
-               'login'
+               'login',
+                'weiboLogin'
             ]),
             handleSubmit(name) {
                 let _this=this;

@@ -5,6 +5,8 @@ import Routers from './router';
 import store from './store/'
 import Util from './libs/util';
 import App from './app.vue';
+import { sync } from 'vuex-router-sync'
+
 import 'iview/dist/styles/iview.css';
 
 
@@ -24,13 +26,12 @@ const router = new VueRouter(RouterConfig);
 router.beforeEach((to, from, next) => {
     iView.LoadingBar.start();
     Util.title(to.meta.title);
-
     //权限验证
     const data=JSON.parse(sessionStorage.getItem('storeData'));
     if(data != null){
-        Vue.prototype.$http.defaults.headers.common['Authorization'] = 'Bearer ' + data.jwt; // 注意Bearer后有个空格
+        Vue.prototype.$http.defaults.headers.common['Authorization'] = 'Bearer ' + data.token; // 注意Bearer后有个空格
         next()
-    }else if(to.path == '/login'){
+    }else if(to.path == '/login'||to.path == '/weiboLogin'){
         next()
     }else{
         next('/login')
@@ -41,7 +42,7 @@ router.afterEach(() => {
     iView.LoadingBar.finish();
     window.scrollTo(0, 0);
 });
-
+sync(store, router)
 
 new Vue({
     el: '#app',

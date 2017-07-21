@@ -11,6 +11,7 @@ var cors = require('koa2-cors')
 const SystemConfig = require('./config/SystemConfig')
 const ApiRoute = require('./routes/ApiRoute')
 const AuthRoute = require('./routes/AuthRoute')
+const WeiboRoute = require('./routes/WeiboRoute')
 
 // error handler
 onerror(app)
@@ -37,7 +38,7 @@ app.use(function(ctx, next){
         }
     });
 });
-
+router.use('/weibo', WeiboRoute.routes()) // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
 router.use('/auth', AuthRoute.routes()) // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
 router.use("/api",jwt({secret: SystemConfig.secret}),ApiRoute.routes()) // 所有走/api/打头的请求都需要经过jwt验证。
 app.use(router.routes())// 将路由规则挂载到Koa上。

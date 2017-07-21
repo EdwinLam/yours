@@ -27,6 +27,16 @@ class UserService extends BaseService{
             }
         }
     }
+     createJwt(userInfo){
+        if(userInfo==null)return "";
+        const userToken = {
+            name: userInfo.name,
+            id: userInfo.id
+        }
+        const secret = SystemConfig.secret // 指定密钥
+        const token = jwt.sign(userToken, secret) // 签发token
+        return token;
+    }
     /*
      * 登录
      * @param {String} name 用户名
@@ -47,16 +57,7 @@ class UserService extends BaseService{
         });
         if(userInfo!=null){
             if (bcrypt.compareSync(password, userInfo.password)) {
-                const userToken = {
-                    name: userInfo.name,
-                    id: userInfo.id
-                }
-                const secret = SystemConfig.secret // 指定密钥
-                const token = jwt.sign(userToken, secret) // 签发token
-                return {
-                    success: true,
-                    token: token // 返回token
-                }
+               return {token:this.createJwt(userInfo),userInfo:userInfo,success:true};
             }else{
                 return {
                     success:false,
