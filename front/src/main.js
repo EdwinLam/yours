@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import iView from 'iview';
-import VueRouter from 'vue-router';
-import Routers from './router';
+import router from './router';
 import store from './store/'
 import Util from './libs/util';
 import App from './app.vue';
@@ -10,18 +9,11 @@ import { sync } from 'vuex-router-sync'
 import 'iview/dist/styles/iview.css';
 
 
-Vue.use(VueRouter);
 Vue.use(iView);
 
 Vue.prototype.$http = Util.ajax
 Vue.prototype.$Util = Util
 
-// 路由配置
-const RouterConfig = {
-    mode: 'history',
-    routes: Routers
-};
-const router = new VueRouter(RouterConfig);
 
 router.beforeEach((to, from, next) => {
     iView.LoadingBar.start();

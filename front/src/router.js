@@ -1,3 +1,6 @@
+import VueRouter from 'vue-router';
+import Vue from 'vue';
+Vue.use(VueRouter);
 const routers = [
     {
     path: '/',
@@ -27,4 +30,6 @@ const routers = [
     }
 
 ];
-export default routers;
+export default  new VueRouter( {
+    mode: 'history',
+    routes: routers});

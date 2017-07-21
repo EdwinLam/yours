@@ -91,9 +91,9 @@
                 </div>
                 <div class="layout-breadcrumb">
                     <Breadcrumb>
-                        <Breadcrumb-item>首页</Breadcrumb-item>
-                        <Breadcrumb-item>页面</Breadcrumb-item>
-                        <Breadcrumb-item>{{this.$route.path.replace('/','')}}</Breadcrumb-item>
+                        <Breadcrumb-item>{{moduleName}}</Breadcrumb-item>
+                        <Breadcrumb-item>{{functionName}}</Breadcrumb-item>
+                        <Breadcrumb-item>{{detailName}}</Breadcrumb-item>
                     </Breadcrumb>
                 </div>
                 <div class="layout-content">
@@ -113,23 +113,27 @@
 </template>
 
 <script>
+    import { mapGetters } from 'vuex'
 
     export default {
 
         data() {
             return {
+                test:"test",
                 spanLeft: 5,
                 spanRight: 19,
                 page: ['about','form','table','markdown-viewer', 'markdown-editor-1', 'markdown-editor-2','rtf','upload','echarts']
             }
         },
         computed: {
+            ...mapGetters(['moduleName','functionName','detailName']),
             iconSize() {
                 return this.spanLeft === 5 ? 14 : 24;
             },
             setActive() {
                 return this.$route.path.replace('/','');
-            }
+            },
+
         },
         methods: {
             toggleClick() {

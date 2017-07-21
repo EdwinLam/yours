@@ -1,17 +1,27 @@
 import auth from '../../api/auth'
 import weibo from '../../api/weibo'
+import iView from 'iview';
+import router from '../../router';
 
 import * as types from '../mutation-types'
 
 const state = {
     userInfo: {},
     weiboUserInfo:{},
-    token:""
+    token:"",
+    pageInfo:{
+        moduleName:"用户管理",
+        functionName:"",
+        detailName:""
+    }
 }
 
 // getters
 const getters = {
     jwt:state=>state.jwt,
+    moduleName:state=>state.pageInfo.moduleName,
+    functionName:state=>state.pageInfo.functionName,
+    detailName:state=>state.pageInfo.detailName
 }
 
 // actions
@@ -20,10 +30,11 @@ const actions = {
         const res = await auth.login(name, password)
         if (res.data.success) {
             commit(types.LOGIN_SUCCESS, res.data)
-            commit(types.ASSISTANT_SHOW_MSG,{msg:'登录成功',type:'success'})
-            commit(types.ASSISTANT_REDIRECT, {path:'/index'})
+            iView.Message.success("身份验证成功")
+            router.push('/index')
         } else {
             commit(types.LOGIN_FAILURE, res.data)
+            iView.Message.success(res.data.message)
             commit(types.ASSISTANT_SHOW_MSG, {msg:res.data.message,type:'error'} )
         }
     },
@@ -31,8 +42,8 @@ const actions = {
         const res = await weibo.getUserInfo(code)
         if(res.data.userInfo!=null){
             commit(types.LOGIN_SUCCESS,{userInfo:res.data.userInfo,token:res.data.token,weiboUserInfo:res.data.weiboUserInfo})
-            commit(types.ASSISTANT_SHOW_MSG,{msg:'登录成功',type:'success'})
-            commit(types.ASSISTANT_REDIRECT, {path:'/index'})
+            iView.Message.success("身份验证成功")
+            router.push('/index')
         }
     },
     restoreData({commit, state}){
