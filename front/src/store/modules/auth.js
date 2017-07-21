@@ -30,19 +30,14 @@ const actions = {
         const res = await auth.login(name, password)
         if (res.data.success) {
             commit(types.LOGIN_SUCCESS, res.data)
-            iView.Message.success("身份验证成功")
-            router.push('/index')
         } else {
             commit(types.LOGIN_FAILURE, res.data)
-            iView.Message.success(res.data.message)
-            commit(types.ASSISTANT_SHOW_MSG, {msg:res.data.message,type:'error'} )
         }
     },
     async weiboLogin({commit, state}, {code}) {
         const res = await weibo.getUserInfo(code)
         if(res.data.userInfo!=null){
             commit(types.LOGIN_SUCCESS,{userInfo:res.data.userInfo,token:res.data.token,weiboUserInfo:res.data.weiboUserInfo})
-            iView.Message.success("身份验证成功")
             router.push('/index')
         }
     },
@@ -65,17 +60,20 @@ const mutations = {
     [types.LOGIN_SUCCESS] (state,{userInfo,token,weiboUserInfo}) {
         state.userInfo =userInfo
         state.token=token
-        state.loginMessage="登录成功"
         state.weiboUserInfo=weiboUserInfo
         sessionStorage.setItem('storeData',JSON.stringify(state))
+        iView.Message.success("身份验证成功")
+        router.push('/index')
     },
 
     [types.LOGIN_FAILURE] (state, { message }) {
         sessionStorage.removeItem('storeData')
+        iView.Message.success(message)
         resetParam()
     },
     [types.LOGIN_OUT](state){
         sessionStorage.removeItem('storeData')
+        router.push('/login')
         resetParam()
     }
 }
