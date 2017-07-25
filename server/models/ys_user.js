@@ -24,10 +24,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: true
     },
-    nick: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
     createdAt: {
       type: DataTypes.BIGINT,
       allowNull: true

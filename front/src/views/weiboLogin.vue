@@ -32,18 +32,41 @@
 
                 <div>
                     <Form ref="formInline" :model="formInline" :rules="ruleInline">
-                        <Form-item prop="user">
-                            <Input type="text" v-model="formInline.user" icon="ios-person-outline" placeholder="Username"/>
-                        </Form-item>
-                        <Form-item prop="password">
-                            <Input type="password" v-model="formInline.password" icon="ios-locked-outline" placeholder="Password"/>
-                        </Form-item>
-                        <a href="https://api.weibo.com/oauth2/authorize?client_id=2719342288&redirect_uri=http://127.0.0.1:8080/login&response_type=code">
-                            <img src="../images/weibo_login.png"/>
-                        </a>
-                        <Form-item>
-                            <Button type="primary" @click="handleSubmit('formInline')" long>登录</Button>
-                        </Form-item>
+
+                        <Tabs value="name1" size="small">
+                            <Tab-pane label="绑定已有" name="name1">
+                                <Form-item prop="user">
+                                    <Input type="text" v-model="formInline.user" icon="ios-person-outline" placeholder="Username"/>
+                                </Form-item>
+                                <Form-item prop="password">
+                                    <Input type="password" v-model="formInline.password" icon="ios-locked-outline" placeholder="Password"/>
+                                </Form-item>
+
+                                <Form-item>
+                                    <Button type="primary" @click="handleSubmit('formInline')" long>绑定</Button>
+                                </Form-item>
+                            </Tab-pane>
+                            <Tab-pane label="新建绑定" name="name2">
+                                <Form-item prop="user">
+                                    <Input type="text" v-model="formInline.user" icon="ios-person-outline" placeholder="phone"/>
+                                </Form-item>
+                                <Form-item prop="user">
+                                    <Input type="text" v-model="formInline.user" icon="ios-person-outline" placeholder="Username"/>
+                                </Form-item>
+                                <Form-item prop="password">
+                                    <Input type="password" v-model="formInline.password" icon="ios-locked-outline" placeholder="Password"/>
+                                </Form-item>
+                                <Form-item prop="password">
+                                    <Input type="password" v-model="formInline.password" icon="ios-locked-outline" placeholder="Password"/>
+                                </Form-item>
+
+                                <Form-item>
+                                    <Button type="primary" @click="handleSubmit('formInline')" long>新建</Button>
+                                </Form-item>
+
+                            </Tab-pane>
+                        </Tabs>
+
                     </Form>
                 </div>
         </Col>
@@ -52,12 +75,14 @@
 </template>
 <script>
     import { mapActions } from 'vuex'
+    import state from '../store/index'
+
 
     export default {
-        mounted:function(){
-            var weiboCode=this.$route.query.code;
-            if(weiboCode!=null){//微博单点登录
-                this.weiboLogin({code:weiboCode});
+        beforeCreate: function () {
+            let weiboCode=this.$route.query.code;
+            if (weiboCode != null) {//微博单点登录
+                state.dispatch('weiboLogin',{code: weiboCode})
             }
         },
         data () {

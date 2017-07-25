@@ -26,20 +26,27 @@ const getters = {
 
 // actions
 const actions = {
-    async login({commit, state}, {name, password}) {
-        const res = await auth.login(name, password)
+    async login({commit}, {phone, password}) {
+        const res = await auth.login(phone, password)
+        console.log(res.data)
         if (res.data.success) {
             commit(types.LOGIN_SUCCESS, res.data)
         } else {
             commit(types.LOGIN_FAILURE, res.data)
         }
     },
+    /*微博登录*/
     async weiboLogin({commit, state}, {code}) {
         const res = await weibo.getUserInfo(code)
-        if(res.data.userInfo!=null){
-            commit(types.LOGIN_SUCCESS,{userInfo:res.data.userInfo,token:res.data.token,weiboUserInfo:res.data.weiboUserInfo})
-            router.push('/index')
-        }
+        state.weiboUserInfo=res.data.weiboUserInfo;
+        return new Promise(function(resolve) {
+            if(res.data.userInfo!=null){
+                commit(types.LOGIN_SUCCESS,{userInfo:res.data.userInfo,token:res.data.token})
+            }
+            resolve();
+        });
+
+
     },
     restoreData({commit, state}){
         const data=JSON.parse(sessionStorage.getItem('storeData'));
@@ -57,18 +64,17 @@ const resetParam=function(){
 }
 
 const mutations = {
-    [types.LOGIN_SUCCESS] (state,{userInfo,token,weiboUserInfo}) {
-        state.userInfo =userInfo
-        state.token=token
-        state.weiboUserInfo=weiboUserInfo
+    [types.LOGIN_SUCCESS] (state,{values,message}) {
+        state.userInfo =values.userInfo
+        state.token=values.token
         sessionStorage.setItem('storeData',JSON.stringify(state))
-        iView.Message.success("身份验证成功")
+        iView.Message.success(message)
         router.push('/index')
     },
 
-    [types.LOGIN_FAILURE] (state, { message }) {
+    [types.LOGIN_FAILURE] (state, {message}) {
         sessionStorage.removeItem('storeData')
-        iView.Message.success(message)
+        iView.Message.error(message)
         resetParam()
     },
     [types.LOGIN_OUT](state){

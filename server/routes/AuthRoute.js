@@ -1,5 +1,5 @@
 const router = require('koa-router')()
-const UserController =new (require('../controller/UserController'))();
+const UserService =require('../service/UserService')
 /*用户相关接口*/
-router.post('/login',UserController.login)//登录
+router.post('/login',(ctx)=>UserService.login(ctx))//登录
 module.exports = router

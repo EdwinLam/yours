@@ -32,11 +32,11 @@
 
                 <div>
                     <Form ref="formInline" :model="formInline" :rules="ruleInline">
-                        <Form-item prop="user">
-                            <Input type="text" v-model="formInline.user" icon="ios-person-outline" placeholder="Username"/>
+                        <Form-item prop="phone">
+                            <Input type="text" v-model="formInline.phone" icon="iphone" placeholder="请输入手机号"/>
                         </Form-item>
                         <Form-item prop="password">
-                            <Input type="password" v-model="formInline.password" icon="ios-locked-outline" placeholder="Password"/>
+                            <Input type="password" v-model="formInline.password" icon="ios-locked-outline" placeholder="请输入密码"/>
                         </Form-item>
                         <a href="https://api.weibo.com/oauth2/authorize?client_id=2719342288&redirect_uri=http://127.0.0.1:8080/weiboLogin&response_type=code">
                             <img src="../images/weibo_login.png"/>
@@ -60,12 +60,12 @@
         data () {
             return {
                 formInline: {
-                    user: '',
+                    phone: '',
                     password: ''
                 },
                 ruleInline: {
-                    user: [
-                        { required: true, message: '请填写用户名', trigger: 'blur' }
+                    phone: [
+                        { required: true, message: '请填写手机', trigger: 'blur' }
                     ],
                     password: [
                         { required: true, message: '请填写密码', trigger: 'blur' },
@@ -83,7 +83,7 @@
                 _this.$refs[name].validate(async (valid) => {
                     if (valid) {
                        this.login({
-                            name: this.formInline.user,
+                            phone: this.formInline.phone,
                             password: this.formInline.password
                         })
                     } else {

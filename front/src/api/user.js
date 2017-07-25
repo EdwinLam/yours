@@ -1,14 +1,11 @@
-export default {
-    getProducts (cb) {
-        setTimeout(() => cb(_products), 100)
-    },
+import Util from '../libs/util';
 
-    buyProducts (products, cb, errorCb) {
-        setTimeout(() => {
-            // simulate random checkout failure.
-            (Math.random() > 0.5 || navigator.userAgent.indexOf('PhantomJS') > -1)
-                ? cb()
-                : errorCb()
-        }, 100)
+export default {
+    queryUserByPage (pageNo,pageSize) {
+        return Util.ajax.get('/api/user/queryUserByPage', {params:{pageNo:pageNo,pageSize:pageSize}});
+    },
+    create(name,phone,password){
+        return Util.ajax.post('/api/user/create', {name:name,password:password,phone:phone});
+
     }
 }

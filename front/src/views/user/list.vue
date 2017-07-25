@@ -4,27 +4,33 @@
 <Table :data="userItems" :columns="userColumns" stripe></Table>
 <div style="margin: 10px;overflow: hidden">
     <div style="float: right;">
-        <Page :total="total" :current="pageNo" :page-size="pageSize" @on-change="queryPage"></Page>
+        <Page :total="total" :current="pageNo" :page-size="pageSize" @on-change="getUserItems"></Page>
     </div>
 </div>
     </div>
 </template>
 <script>
     import addView from './add.vue';
+    import { mapActions,mapState } from 'vuex'
 
     export default {
         components:{
             addView
         },
-        created(){
-            this.queryPage(1);
+        mounted(){
+            this.getUserItems(1,10)
+        },
+        computed: {
+            ...mapState({
+                userItems: ({user}) => user.userItems,
+                total: ({user}) => user.total,
+                pageNo: ({user}) => user.pageNo,
+                pageSize: ({user}) => user.pageSize
+            })
         },
         data () {
             return {
-                total:10,
-                pageNo:1,
-                pageSize:10,
-                userItems: [],
+
                 userColumns: [
                     {
                         title: '名称',
@@ -95,20 +101,10 @@
                     }
                 });
 
-
-
             },
-            queryPage (pageNo) {
-                this.$http.get("/api/user/queryUserByPage", {
-                    params: {pageNo:pageNo,pageSize:this.pageSize}
-                }) .then((res) => {
-                    this.total=res.data.count;
-                    this.pageNo=res.data.pageNo;
-                    this.userItems=res.data.rows;
-                }, (err) => {
-                    this.$Message.error('查询失败！')
-                })
-            }
+            ...mapActions([
+                'getUserItems'
+            ])
         }
     }
 </script>
