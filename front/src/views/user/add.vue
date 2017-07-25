@@ -1,19 +1,22 @@
 <template>
     <div>
     <Button type="ghost" @click="modal1 = true"><Icon type="person"></Icon>新增用户</Button>
-    <Modal v-model="modal1" title="新建用户" :loading="loading" @on-ok="ok" @on-cancel="cancel">
+    <Modal v-model="modal1" title="新建用户" :loading="loading">
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80" ok-text="新建">
             <Form-item label="手机" prop="phone">
-                <Input v-model="formValidate.phone" placeholder="请输入手机"></Input>
+                <Input v-model="formValidate.phone" placeholder="请输入手机" :disabled="loading"></Input>
             </Form-item>
             <Form-item label="名称" prop="name">
-                <Input v-model="formValidate.name" placeholder="请输入名称"></Input>
+                <Input v-model="formValidate.name" placeholder="请输入名称" :disabled="loading"></Input>
             </Form-item>
             <Form-item label="密码" prop="password">
-                <Input type="password" v-model="formValidate.password" placeholder="请输入密码"></Input>
+                <Input type="password" v-model="formValidate.password" placeholder="请输入密码" :disabled="loading"></Input>
             </Form-item>
         </Form>
-
+        <div slot="footer">
+            <Button type="ghost"  size="large" @click="cancel">取消</Button>
+            <Button type="primary" size="large":loading="loading" @click="ok">确认</Button>
+        </div>
     </Modal>
     </div>
 </template>
@@ -25,7 +28,7 @@
         components: {Icon},
         data () {
             return {
-                loading:true,
+                loading:false,
                 modal1: false,
                 formValidate: {
                     phone: '',
@@ -55,9 +58,11 @@
             handleSubmit (name) {
                 this.$refs[name].validate(async (valid) => {
                     if (valid) {
+                        this.loading=true
                         const success=await this.$store.dispatch('create', {name:this.formValidate.name, phone:this.formValidate.phone, password:this.formValidate.password})
                         if(success)
                             this.modal1=false
+                        this.loading=false
                     } else {
                         this.$Message.error('表单验证失败!');
                     }
