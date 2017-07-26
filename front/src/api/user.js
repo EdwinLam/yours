@@ -12,5 +12,8 @@ export default {
     },
     delete(id){
         return Util.ajax.delete('/api/user/'+id)
+    },
+    update(id,name){
+        return Util.ajax.post('/api/user/'+id,{name:name})
     }
 }

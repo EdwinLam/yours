@@ -46,6 +46,16 @@ const actions = {
             commit(types.DELETE_USER_FAILURE, res.data)
         return res.data.success
     },
+    /*更你用户*/
+    async updateUser({commit,state,dispatch}, {id,name}){
+        const res=await user.update(id,name)
+        if (res.data.success) {
+            await dispatch('getUserItems',state.pageNo,state.pageSize)
+            commit(types.UPDATE_USER_SUCCESS, res.data)
+        }else
+            commit(types.UPDATE_USER_FAILURE, res.data)
+        return res.data.success
+    },
     /*是否存在手机用户*/
     async isExistPhone({commit}, phone){
         const res=await user.isExistPhone(phone)
@@ -77,7 +87,12 @@ const mutations = {
     },
     [types.DELETE_USER_FAILURE] (state,{message}) {
         iView.Message.error(message)
-
+    },
+    [types.UPDATE_USER_SUCCESS] (state,{message}) {
+        iView.Message.success(message)
+    },
+    [types.UPDATE_USER_FAILURE] (state,{message}) {
+        iView.Message.error(message)
     },
 }
 

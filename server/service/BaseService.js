@@ -15,6 +15,7 @@ class BaseService{
         return  await this.UserDao.create(values,{});
     }
 
+
     async queryByPage(ctx){
         let pageNo=parseInt(ctx.query.pageNo)||1;
         let pageSize=parseInt(ctx.query.pageSize)||10;

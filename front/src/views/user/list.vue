@@ -1,6 +1,8 @@
 <template>
     <div>
-        <addView></addView>
+        <Button type="ghost" @click="isShowAdd=true"><Icon type="person"></Icon>新增用户</Button>
+        <addView v-model="isShowAdd"/>
+        <editView v-model="isShowEdit" :userItem="curUserItem"/>
 <Table :data="userItems" :columns="userColumns" stripe></Table>
 <div style="margin: 10px;overflow: hidden">
     <div style="float: right;">
@@ -10,12 +12,13 @@
     </div>
 </template>
 <script>
-    import addView from './add.vue';
+    import addView from './add.vue'
+    import editView from './edit.vue';
     import { mapActions,mapState } from 'vuex'
 
     export default {
         components:{
-            addView
+            addView,editView
         },
         mounted(){
             this.getUserItems(1,10)
@@ -30,7 +33,9 @@
         },
         data () {
             return {
-
+                curUserItem:{},
+                isShowAdd:false,
+                isShowEdit:false,
                 userColumns: [
                     {
                         title: '名称',
@@ -78,7 +83,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.show(params.index)
+                                            this.editInit(params.index)
                                         }
                                     }
                                 }, '修改'),
@@ -100,6 +105,10 @@
             }
         },
         methods: {
+            editInit(index){
+               this.curUserItem=this.userItems[index]
+               this.isShowEdit=true
+            },
             show (index) {
                 this.$Modal.info({
                     title: '用户信息',
@@ -113,7 +122,7 @@
                     onOk: async () => {
                         await this.$store.dispatch('deleteUser', this.userItems[index].id)
                     }
-                });
+                })
 
             },
             ...mapActions([

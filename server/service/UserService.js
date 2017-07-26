@@ -55,8 +55,8 @@ class UserService extends BaseService{
      * @param {String} password 密码
      */
     async login(ctx){
-        const phone= ctx.request.body.phone;
-        const password= ctx.request.body.password;
+        const phone= ctx.request.body.phone
+        const password= ctx.request.body.password
         if(StringUtil.isNull(phone)||StringUtil.isNull(password))
             ctx.body=this.createResult(false,"手机号和密码不能为空")
         const userInfo=await this.UserDao.findOne({
@@ -68,6 +68,16 @@ class UserService extends BaseService{
             bcrypt.compareSync(password, userInfo.password)?
                 this.createResult(true,"身份验证成功",{token:this.createJwt(userInfo),userInfo:userInfo}):
                 this.createResult(false,"密码错误")
+    }
+
+    async updateUser(ctx){
+        const name= ctx.request.body.name
+        const id=ctx.params.id
+        if(StringUtil.isNull(name))
+            ctx.body=this.createResult(false,"名称不能为空")
+        const  res=await this.UserDao.update(
+            {name:name},{where:{id:id}})
+        ctx.body=this.createResult(true,"更新成功")
     }
 }
 module.exports=new UserService();
