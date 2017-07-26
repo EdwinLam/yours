@@ -92,12 +92,8 @@
                 this.$Modal.confirm({
                     title: '确认对话框标题',
                     content: '<p>是否删除用户'+this.userItems[index].name+'</p>',
-                    onOk: () => {
-                        this.$http.delete("/api/user/"+this.userItems[index].id).then((res) => {
-                            this.userItems.splice(index, 1);
-                        }, (err) => {
-                            this.$Message.error('删除失败！')
-                        })
+                    onOk: async () => {
+                        await this.$store.dispatch('deleteUser', this.userItems[index].id)
                     }
                 });
 

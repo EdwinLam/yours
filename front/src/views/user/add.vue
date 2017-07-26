@@ -1,7 +1,7 @@
 <template>
     <div>
-    <Button type="ghost" @click="modal1 = true"><Icon type="person"></Icon>新增用户</Button>
-    <Modal v-model="modal1" title="新建用户" :loading="loading">
+    <Button type="ghost" @click="isShowModal = true"><Icon type="person"></Icon>新增用户</Button>
+    <Modal v-model="isShowModal" title="新建用户" :loading="loading">
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80" ok-text="新建">
             <Form-item label="手机" prop="phone">
                 <Input v-model="formValidate.phone" placeholder="请输入手机" :disabled="loading"></Input>
@@ -27,9 +27,22 @@
     export default {
         components: {Icon},
         data () {
+            const validatePhoneCheck = async (rule, value, callback) => {
+                if(value==''){
+                    callback()
+                }else{
+                    const isExistPhone = await this.$store.dispatch('isExistPhone',value)
+                    if(isExistPhone){
+                        callback(new Error('系统中已存在该手机号'))
+                    }else{
+                        callback();
+                    }
+                }
+            }
             return {
+
                 loading:false,
-                modal1: false,
+                isShowModal: false,
                 formValidate: {
                     phone: '',
                     name: '',
@@ -37,7 +50,8 @@
                 },
                 ruleValidate: {
                     phone: [
-                        { required: true, message: '号码不能为空', trigger: 'blur' }
+                        { required: true, message: '号码不能为空', trigger: 'blur' },
+                        {validator: validatePhoneCheck, trigger: 'blur' }
                     ],
                     name: [
                         { required: true, message: '名称不能为空', trigger: 'blur' }
@@ -45,6 +59,7 @@
                     password: [
                         { required: true, message: '密码不能为空', trigger: 'blur' }
                     ]
+
                 }
             }
         },
@@ -53,7 +68,7 @@
                 this.handleSubmit("formValidate");
             },
             cancel () {
-                this.modal1=false
+                this.isShowModal=false
             },
             handleSubmit (name) {
                 this.$refs[name].validate(async (valid) => {
@@ -61,7 +76,7 @@
                         this.loading=true
                         const success=await this.$store.dispatch('create', {name:this.formValidate.name, phone:this.formValidate.phone, password:this.formValidate.password})
                         if(success)
-                            this.modal1=false
+                            this.isShowModal=false
                         this.loading=false
                     } else {
                         this.$Message.error('表单验证失败!');

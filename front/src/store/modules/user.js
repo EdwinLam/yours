@@ -16,6 +16,7 @@ const getters = {
 
 // actions
 const actions = {
+    /*获取用户列表*/
     async getUserItems({commit}, pageNo, pageSize) {
         pageSize=pageSize||10
         const res = await user.queryUserByPage(pageNo, pageSize)
@@ -24,14 +25,30 @@ const actions = {
          else
             commit(types.GET_USER_ITEMS_FAILURE, res.data)
     },
-    async create({commit,dispatch}, {name,phone,password}) {
-        console.log(password)
+    /*创建用户*/
+    async create({state,commit,dispatch}, {name,phone,password}) {
         const res = await user.create(name,phone,password)
         if (res.data.success) {
-            await dispatch('getUserItems',1,10)
+            await dispatch('getUserItems',1,state.pageSize)
             commit(types.CREATE_USER_SUCCESS, res.data)
         }else
             commit(types.CREATE_USER_FAILURE, res.data)
+        return res.data.success
+    },
+    /*删除用户*/
+    async deleteUser({commit,state,dispatch}, id){
+        const res=await user.delete(id)
+        if (res.data.success) {
+            state.pageNo=state.userItems.length<=1&&state.pageNo>1?state.pageNo-1:state.pageNo
+            await dispatch('getUserItems',state.pageNo,state.pageSize)
+            commit(types.DELETE_USER_SUCCESS, res.data)
+        }else
+            commit(types.DELETE_USER_FAILURE, res.data)
+        return res.data.success
+    },
+    /*是否存在手机用户*/
+    async isExistPhone({commit}, phone){
+        const res=await user.isExistPhone(phone)
         return res.data.success
     }
 }
@@ -53,6 +70,12 @@ const mutations = {
         iView.Message.success(message)
     },
     [types.CREATE_USER_FAILURE] (state,{message}) {
+        iView.Message.error(message)
+    },
+    [types.DELETE_USER_SUCCESS] (state,{message}) {
+        iView.Message.success(message)
+    },
+    [types.DELETE_USER_FAILURE] (state,{message}) {
         iView.Message.error(message)
 
     },

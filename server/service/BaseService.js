@@ -30,7 +30,9 @@ class BaseService{
         ctx.body=this.createResult(true,"成功获取",result)
     }
     async destroy(ctx){
-        return  await this.UserDao.destroy({where:{id:ctx.params.id}});
+        const count=await this.UserDao.destroy({where:{id:ctx.params.id}})
+        const isSuccess=count>0;
+        ctx.body=this.createResult(isSuccess,isSuccess?"删除数据成功":"删除数据失败")
     }
     createResult(success,message,data){
         return {
