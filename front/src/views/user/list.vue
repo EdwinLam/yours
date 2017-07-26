@@ -1,6 +1,6 @@
 <template>
     <div>
-        <addView @updateList="queryPage(1)"></addView>
+        <addView></addView>
 <Table :data="userItems" :columns="userColumns" stripe></Table>
 <div style="margin: 10px;overflow: hidden">
     <div style="float: right;">
@@ -37,6 +37,10 @@
                         key: 'name'
                     },
                     {
+                        title: '号码',
+                        key: 'phone'
+                    },
+                    {
                         title: '创建时间',
                         key: 'createdAt',
                         render: (h, params) => {
@@ -46,7 +50,7 @@
                     {
                         title: '操作',
                         key: 'action',
-                        width: 150,
+                        width: 200,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
@@ -64,6 +68,20 @@
                                         }
                                     }
                                 }, '查看'),
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.show(params.index)
+                                        }
+                                    }
+                                }, '修改'),
                                 h('Button', {
                                     props: {
                                         type: 'error',

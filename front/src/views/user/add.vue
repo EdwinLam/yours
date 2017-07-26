@@ -51,13 +51,16 @@
                 ruleValidate: {
                     phone: [
                         { required: true, message: '号码不能为空', trigger: 'blur' },
-                        {validator: validatePhoneCheck, trigger: 'blur' }
+                        { pattern: '^1[3|4|5|7|8][0-9]{9}$', message: '手机号码格式不符', trigger: 'blur' },
+                        {validator: validatePhoneCheck, trigger: 'blur' },
+
                     ],
                     name: [
-                        { required: true, message: '名称不能为空', trigger: 'blur' }
+                        { required: true, message: '名称不能为空', trigger: 'blur' },
+                        { type: 'string', max: 20, message: '名称不能超过20个字符', trigger: 'blur' }
                     ],
                     password: [
-                        { required: true, message: '密码不能为空', trigger: 'blur' }
+                        { required: true, message: '密码不能为空', trigger: 'blur' },
                     ]
 
                 }
