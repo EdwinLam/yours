@@ -4,7 +4,7 @@
             <Form ref="formValidate" :model="userInfo" :rules="ruleValidate" :label-width="80" >
 
                 <Form-item label="名称" prop="name">
-                    <Input v-model="userInfo.name" placeholder="请输入名称" :disabled="loading"></Input>
+                    <Input v-model="userInfo.nickname" placeholder="请输入名称" :disabled="loading"></Input>
                 </Form-item>
 
             </Form>
@@ -27,7 +27,7 @@
                 return this.value
             },
             userInfo:function(){
-                return {name:this.userItem.name,phone:this.userItem.phone,id:this.userItem.id}
+                return {nickname:this.userItem.nickname,phone:this.userItem.phone,id:this.userItem.id}
             }
         },
         data () {
@@ -35,7 +35,7 @@
                 loading:false,
                 ruleValidate: {
 
-                    name: [
+                    nickname: [
                         { required: true, message: '名称不能为空', trigger: 'blur' },
                         { type: 'string', max: 20, message: '名称不能超过20个字符', trigger: 'blur' }
                     ]

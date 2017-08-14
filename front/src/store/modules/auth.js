@@ -18,7 +18,7 @@ const state = {
 
 // getters
 const getters = {
-    jwt:state=>state.jwt,
+    jwt:state=>state.token,
     moduleName:state=>state.pageInfo.moduleName,
     functionName:state=>state.pageInfo.functionName,
     detailName:state=>state.pageInfo.detailName
@@ -44,9 +44,7 @@ const actions = {
                 commit(types.LOGIN_SUCCESS,{userInfo:res.data.userInfo,token:res.data.token})
             }
             resolve();
-        });
-
-
+        })
     },
     restoreData({commit, state}){
         const data=JSON.parse(sessionStorage.getItem('storeData'));

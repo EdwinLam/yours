@@ -12,6 +12,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: true
     },
+    pid: {
+      type: DataTypes.INTEGER(6),
+      allowNull: true
+    },
     createdAt: {
       type: DataTypes.TEXT,
       allowNull: true
@@ -19,6 +23,11 @@ module.exports = function(sequelize, DataTypes) {
     updatedAt: {
       type: DataTypes.TEXT,
       allowNull: true
+    },
+    status: {
+      type: DataTypes.INTEGER(1),
+      allowNull: true,
+      defaultValue: '0'
     }
   }, {
     tableName: 'ys_role'

@@ -39,7 +39,7 @@
                 userColumns: [
                     {
                         title: '名称',
-                        key: 'name'
+                        key: 'nickname'
                     },
                     {
                         title: '号码',
@@ -112,7 +112,7 @@
             show (index) {
                 this.$Modal.info({
                     title: '用户信息',
-                    content: `姓名：${this.userItems[index].name}<br>创建日期：${this.$Util.formatDate(this.userItems[index].createdAt)}`
+                    content: `姓名：${this.userItems[index].nickname}<br>创建日期：${this.$Util.formatDate(this.userItems[index].createdAt)}`
                 })
             },
             remove (index) {
