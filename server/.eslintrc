@@ -1,0 +1,18 @@
+{
+  "env": {
+    "browser": true,
+    "jquery": true,
+    "node" :true
+  },
+  "rules": {
+
+  },
+  "extends": "standard",
+  "globals": {
+    "avalon": true,
+    "layer": true,
+    "laydate":true,
+    "videojs":true
+  }
+
+}

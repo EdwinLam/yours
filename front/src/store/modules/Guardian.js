@@ -37,14 +37,18 @@ const actions = {
     },
     /*微博登录*/
     async weiboLogin({commit, state}, {code}) {
-        const res = await weibo.getUserInfo(code)
-        state.weiboUserInfo=res.data.weiboUserInfo;
-        return new Promise(function(resolve) {
+        const res = await weibo.ssoLogin(code)
+        if(res.data.success){
+          state.weiboUserInfo=res.data.weiboUserInfo;
+          return new Promise(function(resolve) {
             if(res.data.userInfo!=null){
-                commit(types.LOGIN_SUCCESS,{userInfo:res.data.userInfo,token:res.data.token})
+              commit(types.LOGIN_SUCCESS,{userInfo:res.data.userInfo,token:res.data.token})
             }
             resolve();
-        })
+          })
+        }else{
+          iView.Message.error(res.data.message)
+        }
     },
     restoreData({commit, state}){
         const data=JSON.parse(sessionStorage.getItem('storeData'));

@@ -1,26 +1,26 @@
 const Sequelize = require('sequelize')
 const DBConfig = require('../config/DBConfig')
+// 建立连接
 const sequelize = new Sequelize(DBConfig.database, DBConfig.username, DBConfig.password, {
-    host: DBConfig.host,
-    dialect: 'mysql',
-    pool: {
-        max: 5,
-        min: 0,
-        idle: 30000
-    },
-    define: {
-        timestamps: false // 取消Sequelzie自动给数据表加入时间戳（createdAt以及updatedAt）
-    }
+  host: DBConfig.host,
+  dialect: 'mysql',
+  pool: {
+    max: 5,
+    min: 0,
+    idle: 30000
+  },
+  define: {
+    timestamps: false // 取消Sequelzie自动给数据表加入时间戳（createdAt以及updatedAt）
+  }
 })
-class DBUtil{
-    constructor() {
-    }
-    /*
+
+class DBUtil {
+  /*
      * 获取对应的表操作对象
      * @param {Object} model 对应的表模型
      * */
-    static getDao(model){
-        return sequelize.import(model)
-    }
+  static getDao (model) {
+    return sequelize.import('../models/' + model)
+  }
 }
 module.exports = DBUtil
