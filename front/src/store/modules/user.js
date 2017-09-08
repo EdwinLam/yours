@@ -22,7 +22,7 @@ const actions = {
         const res = await user.queryUserByPage(pageNo, pageSize)
         if (res.data.success)
             commit(types.GET_USER_ITEMS_SUCCESS, res.data)
-         else
+        else
             commit(types.GET_USER_ITEMS_FAILURE, res.data)
     },
     /*创建用户*/

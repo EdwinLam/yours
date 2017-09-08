@@ -2,6 +2,7 @@ const BaseService = require('./BaseService')
 const StringUtil = require('../util/StringUtil.js')
 const SystemUtil = require('../util/SystemUtil.js')
 
+
 class UserService extends BaseService {
   constructor () {
     super('ys_user')
@@ -48,7 +49,6 @@ class UserService extends BaseService {
     if (StringUtil.someNull([phone, password])) {
       ctx.body = SystemUtil.createResult({success: false, message: '用户名和密码不能为空'})
     }
-    console.log(this.Dao)
     const userInfo = await this.Dao.findOne({where: {phone: phone}})
     const isSuccess = userInfo != null && SystemUtil.checkPassword(password, userInfo.password)
     const message = isSuccess ? '身份验证成功' : '用户名或者密码错误'
@@ -56,8 +56,9 @@ class UserService extends BaseService {
       token: SystemUtil.createJwt(userInfo.id, userInfo.name),
       userInfo: userInfo
     } : null
-    ctx.body = SystemUtil.createResult({success: isSuccess, message: message, value: value})
+    ctx.body = SystemUtil.createResult({success: isSuccess, message: message, data: value})
   }
+
   /**
    * 新建用户
    * @param {String} name 用户名
@@ -111,6 +112,13 @@ class UserService extends BaseService {
     const isSuccess = count > 0
     const message = isSuccess ? '删除数据成功' : '删除数据失败'
     ctx.body = this.createResult({success: isSuccess, message: message})
+  }
+
+  async getUserInfo (ctx) {
+    let  userInfo = await this.Dao.findOne({where: {id: ctx.state.user.id}})
+    ctx.body =SystemUtil.createResult({success: true, message: '获取成功', data:{
+      userInfo:userInfo
+    }})
   }
 }
 module.exports = new UserService()

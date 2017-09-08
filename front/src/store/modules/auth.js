@@ -8,11 +8,11 @@ import * as types from '../mutation-types'
 const state = {
     userInfo: {},
     weiboUserInfo:{},
-    token:"",
+    token:'',
     pageInfo:{
-        moduleName:"用户管理",
-        functionName:"",
-        detailName:""
+        moduleName:'用户管理',
+        functionName:'',
+        detailName:''
     }
 }
 
@@ -28,7 +28,6 @@ const getters = {
 const actions = {
     async login({commit}, {phone, password}) {
         const res = await auth.login(phone, password)
-        console.log(res.data)
         if (res.data.success) {
             commit(types.LOGIN_SUCCESS, res.data)
         } else {
@@ -39,15 +38,15 @@ const actions = {
     async weiboLogin({commit, state}, {code}) {
         const res = await weibo.ssoLogin(code)
         if(res.data.success){
-          state.weiboUserInfo=res.data.weiboUserInfo;
-          return new Promise(function(resolve) {
-            if(res.data.userInfo!=null){
-              commit(types.LOGIN_SUCCESS,{userInfo:res.data.userInfo,token:res.data.token})
-            }
-            resolve();
-          })
+            state.weiboUserInfo=res.data.weiboUserInfo;
+            return new Promise(function(resolve) {
+                if(res.data.userInfo!=null){
+                    commit(types.LOGIN_SUCCESS,{userInfo:res.data.userInfo,token:res.data.token})
+                }
+                resolve();
+            })
         }else{
-          iView.Message.error(res.data.message)
+            iView.Message.error(res.data.message)
         }
     },
     restoreData({commit, state}){
@@ -79,7 +78,7 @@ const mutations = {
         iView.Message.error(message)
         resetParam()
     },
-    [types.LOGIN_OUT](state){
+    [types.LOGIN_OUT](){
         sessionStorage.removeItem('storeData')
         router.push('/login')
         resetParam()

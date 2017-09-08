@@ -1,12 +1,13 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
-import auth from './modules/auth'
-import user from './modules/user'
-
+import visitor from './modules/visitor'
+import guardian from './modules/guardian'
+import getters from './getters'
 
 export default new Vuex.Store({
     modules: {
-        auth,user
-    }
+      visitor,guardian
+    },
+    getters
 })

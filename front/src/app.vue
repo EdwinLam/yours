@@ -4,30 +4,10 @@
     </div>
 </template>
 <script>
-    import { mapState,mapActions } from 'vuex'
-    export default {
-        data() {
-            return {
 
-            };
-        },
-        computed: {
-
-        },
-
-        watch: {
-
-        },
-        created() {
-            this.restoreData()
-        },
-        beforeDestroy() {
-
-        },
-        methods: {
-            ...mapActions([
-                'restoreData'
-            ])
-        }
-    };
+  export default {
+    created() {
+      this.$store.dispatch('rememberMyself')
+    }
+  };
 </script>

@@ -8,6 +8,7 @@ router.get('/user/isExistPhone', (ctx) => UserService.isExistPhone(ctx))// 分�
 router.post('/user/create', (ctx) => UserService.createUser(ctx))// 创建用户
 router.del('/user/:id', (ctx) => UserService.destroy(ctx))// 删除用户
 router.post('/user/:id', (ctx) => UserService.updateUser(ctx))// 更新用户
+router.get('/user/getUserInfo', (ctx) => UserService.getUserInfo(ctx))// 获取登录用户信息
 
 /* 角色相关接口 */
 router.get('/role/queryByPage', (ctx) => RoleService.queryByPage(ctx))// 分页查询角色信息

@@ -1,23 +1,24 @@
 {
     "root": true,
     "parserOptions": {
-        "ecmaVersion": 6,
+        "ecmaVersion": 8,
         "sourceType": "module",
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true
         }
     },
     "env": {
-        "browser": true
+        "es6": true,
+        "browser": true,
+        "node" :true
+    },
+    "globals": {
+        "process.env": true,
+        "import":true
     },
     "extends": "eslint:recommended",
     "plugins": ["html"],
     "rules": {
-        "indent": ["error", 4, {
-            "SwitchCase": 1
-        }],
-        "quotes": ["error", "single"],
-        "semi": ["error", "always"],
-        "no-console": ["error"]
+        "no-console": "off"
     }
 }

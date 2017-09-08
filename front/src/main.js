@@ -1,40 +1,30 @@
-import Vue from 'vue';
-import iView from 'iview';
-import router from './router';
+import Vue from 'vue'
+import iView from 'iview'
+import router from './router'
 import store from './store/'
-import Util from './libs/util';
-import App from './app.vue';
-import { sync } from 'vuex-router-sync'
-
-import 'iview/dist/styles/iview.css';
-
-
+import fetch from './utils/fetch'
+import App from './app.vue'
+import 'iview/dist/styles/iview.css'
+// import { sync } from 'vuex-router-sync'
+import * as filters from './filters' // 全局filter
 Vue.use(iView);
+Vue.prototype.$http = fetch
 
-Vue.prototype.$http = Util.ajax
-Vue.prototype.$Util = Util
-
+// register global utility filters.
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 
 router.beforeEach((to, from, next) => {
-    iView.LoadingBar.start();
-    Util.title(to.meta.title);
-    //权限验证
-    const data=JSON.parse(sessionStorage.getItem('storeData'));
-    if(data != null){
-        Vue.prototype.$http.defaults.headers.common['Authorization'] = 'Bearer ' + data.token; // 注意Bearer后有个空格
-        next()
-    }else if(to.path == '/login'||to.path == '/weiboLogin'){
-        next()
-    }else{
-        next('/login')
-    }
+    iView.LoadingBar.start()
+    next()
 });
 
 router.afterEach(() => {
     iView.LoadingBar.finish();
     window.scrollTo(0, 0);
-});
-sync(store, router)
+})
+// sync(store, router)
 
 new Vue({
     el: '#app',

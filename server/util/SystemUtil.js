@@ -18,7 +18,7 @@ class SystemUtil {
     return {
       success: success,
       message: message,
-      values: data == null ? {} : data
+      values: data  ?  data :{}
     }
   }
   /* 检查密码 */
