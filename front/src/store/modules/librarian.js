@@ -60,9 +60,6 @@ const actions = {
       })
     })
   }
-
-
-
 }
 const mutations = {
 

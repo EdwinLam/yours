@@ -2,8 +2,7 @@
 
     .layout {
         border: 1px solid #d7dde4;
-        background: #f5f7f9;
-        position: relative;
+        background: #ebebeb;
         border-radius: 4px;
         overflow: hidden;
     }
@@ -31,22 +30,23 @@
     }
 
     .layout-menu-left {
-        background: #464c5b;
+        background: white;
+        border-right: 2px solid transparent;
         /*min-width: 100px;*/
     }
 
     .layout-header {
-        height: 60px;
+        height: 30px;
         background: #fff;
         box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
     }
 
     .layout-logo-left {
-        width: 90%;
+        width: 100%;
         height: 30px;
-        background: #5b6270;
-        border-radius: 3px;
-        margin: 15px auto;
+        background:#2b85e4;
+        margin-left: auto;
+        margin-right: auto;
         line-height: 30px;
         color: white;
         text-align: center;
@@ -61,6 +61,9 @@
     .layout-hide-text .layout-text {
         display: none;
     }
+    .layout-hide-text .ivu-menu-submenu-title-icon{
+        display: none;
+    }
 
     .ivu-col {
         transition: width .2s ease-in-out;
@@ -73,13 +76,13 @@
     <div class="layout" :class="{'layout-hide-text': spanLeft < 5}">
         <Row type="flex">
             <i-col :span="spanLeft" class="layout-menu-left">
-                <Menu :active-name="setActive" theme="dark" width="auto" @on-select="routeTo">
+                <Menu :active-name="setActive" theme="light" width="auto" @on-select="routeTo" style="height:100%">
                     <div class="layout-logo-left">
-                        <h3>后台管理</h3>
+                        <h3>RIPPLE</h3>
                     </div>
-                    <Menu-item name="user">
+                    <Menu-item  v-for="item in passport" :key="item.path" :name="item.path">
                         <Icon type="person-stalker" :size="iconSize"></Icon>
-                        <span class="layout-text">用户管理</span>
+                        <span class="layout-text">{{item.name}}</span>
                     </Menu-item>
                 </Menu>
             </i-col>
@@ -88,6 +91,36 @@
                     <i-button type="text" @click.native="toggleClick">
                         <Icon type="navicon" size="32"></Icon>
                     </i-button>
+                </div>
+                <div>
+                    <Menu mode="horizontal"  active-name="1">
+                        <MenuItem name="1" >
+                            内容管理
+                        </MenuItem>
+                        <MenuItem name="2">
+                            <Icon type="ios-people"></Icon>
+                            用户管理
+                        </MenuItem>
+                        <Submenu name="3">
+                            <template slot="title">
+                                <Icon type="stats-bars"></Icon>
+                                统计分析
+                            </template>
+                            <MenuGroup title="使用">
+                                <MenuItem name="3-1">新增和启动</MenuItem>
+                                <MenuItem name="3-2">活跃分析</MenuItem>
+                                <MenuItem name="3-3">时段分析</MenuItem>
+                            </MenuGroup>
+                            <MenuGroup title="留存">
+                                <MenuItem name="3-4">用户留存</MenuItem>
+                                <MenuItem name="3-5">流失用户</MenuItem>
+                            </MenuGroup>
+                        </Submenu>
+                        <MenuItem name="4">
+                            <Icon type="settings"></Icon>
+                            综合设置
+                        </MenuItem>
+                    </Menu>
                 </div>
                 <div class="layout-breadcrumb">
                     <Breadcrumb>
@@ -113,7 +146,7 @@
 </template>
 
 <script>
-    import { mapGetters } from 'vuex'
+  import { mapState } from 'vuex'
 
     export default {
 
@@ -126,7 +159,9 @@
             }
         },
         computed: {
-            ...mapGetters(['moduleName','functionName','detailName']),
+            ...mapState({
+              passport: ({visitor}) => visitor.passport,
+            }),
             iconSize() {
                 return this.spanLeft === 5 ? 14 : 24;
             },
@@ -139,7 +174,6 @@
             toggleClick() {
                 if (this.spanLeft === 5) {
                     this.spanLeft = 2;
-
                     this.spanRight = 22;
                 } else {
                     this.spanLeft = 5;

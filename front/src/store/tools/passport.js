@@ -15,19 +15,20 @@ const autoSort= function(sourceData){
   })
 }
 
-const collectMap = function(sourceData,collectArry,pathChain){
+const collectMap = function(sourceData,collectArry,pathChain,parentItem){
   let children = []
   sourceData.forEach(function(el){
     const curPathChain = el.level!=0?((pathChain?pathChain:'')+"/" + el.path):''
     if(el.level === 2){
-      children.push(objectMerge(el,{path:el.path,component: (resolve) => require(['@/views'+curPathChain+'/index.vue'], resolve)}))
+      children.push(objectMerge(el,{name:el.name,url:curPathChain,path:el.path,component: (resolve) => require(['@/views'+curPathChain+'/index.vue'], resolve)}))
     }
     if(el.children){
       collectMap(el.children,collectArry,curPathChain,el)
     }
   })
-  if(children.length){
+  if(children.length&&parentItem){
     collectArry.push({
+      name: parentItem.name,
       path: pathChain?pathChain:"/",
       component: (resolve) => require(['@/views/index.vue'], resolve),
       children: children
