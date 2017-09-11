@@ -76,11 +76,11 @@
     <div class="layout" :class="{'layout-hide-text': spanLeft < 5}">
         <Row type="flex">
             <i-col :span="spanLeft" class="layout-menu-left">
-                <Menu :active-name="setActive" theme="light" width="auto" @on-select="routeTo" style="height:100%">
+                <Menu :active-name="cIndex" @on-select="selectModule" theme="light" width="auto" style="height:100%">
                     <div class="layout-logo-left">
                         <h3>RIPPLE</h3>
                     </div>
-                    <Menu-item  v-for="item in passport" :key="item.path" :name="item.path">
+                    <Menu-item  v-for="(item, index) in passport" :key="item.path" :name="index" >
                         <Icon type="person-stalker" :size="iconSize"></Icon>
                         <span class="layout-text">{{item.name}}</span>
                     </Menu-item>
@@ -93,40 +93,17 @@
                     </i-button>
                 </div>
                 <div>
-                    <Menu mode="horizontal"  active-name="1">
-                        <MenuItem name="1" >
-                            内容管理
-                        </MenuItem>
-                        <MenuItem name="2">
-                            <Icon type="ios-people"></Icon>
-                            用户管理
-                        </MenuItem>
-                        <Submenu name="3">
-                            <template slot="title">
-                                <Icon type="stats-bars"></Icon>
-                                统计分析
-                            </template>
-                            <MenuGroup title="使用">
-                                <MenuItem name="3-1">新增和启动</MenuItem>
-                                <MenuItem name="3-2">活跃分析</MenuItem>
-                                <MenuItem name="3-3">时段分析</MenuItem>
-                            </MenuGroup>
-                            <MenuGroup title="留存">
-                                <MenuItem name="3-4">用户留存</MenuItem>
-                                <MenuItem name="3-5">流失用户</MenuItem>
-                            </MenuGroup>
-                        </Submenu>
-                        <MenuItem name="4">
-                            <Icon type="settings"></Icon>
-                            综合设置
+                    <Menu mode="horizontal"  :active-name="0" @on-select="selectFunction">
+                        <MenuItem v-for="(item, index) in functionItems" :key="item.path" :name="index"  >
+                            {{item.name}}
                         </MenuItem>
                     </Menu>
                 </div>
                 <div class="layout-breadcrumb">
                     <Breadcrumb>
-                        <Breadcrumb-item>{{moduleName}}</Breadcrumb-item>
-                        <Breadcrumb-item>{{functionName}}</Breadcrumb-item>
-                        <Breadcrumb-item>{{detailName}}</Breadcrumb-item>
+                        <!--<Breadcrumb-item>{{moduleName}}</Breadcrumb-item>-->
+                        <!--<Breadcrumb-item>{{functionName}}</Breadcrumb-item>-->
+                        <!--<Breadcrumb-item>{{detailName}}</Breadcrumb-item>-->
                     </Breadcrumb>
                 </div>
                 <div class="layout-content">
@@ -152,25 +129,39 @@
 
         data() {
             return {
-                test:"test",
+                cIndex:0,
+                functionItems:[],
                 spanLeft: 5,
                 spanRight: 19,
                 page: ['about','form','table','markdown-viewer', 'markdown-editor-1', 'markdown-editor-2','rtf','upload','echarts']
             }
         },
+      created() {
+        const ctx = this
+        this.passport.forEach(function(el,index){
+          if(ctx.$route.path.indexOf(el.path) != -1) {
+            ctx.cIndex = index
+            ctx.functionItems = el.children
+          }
+        })
+      },
         computed: {
             ...mapState({
               passport: ({visitor}) => visitor.passport,
             }),
             iconSize() {
                 return this.spanLeft === 5 ? 14 : 24;
-            },
-            setActive() {
-                return this.$route.path.replace('/','');
-            },
-
+            }
         },
         methods: {
+            selectFunction:function(index){
+              const ctx = this
+              this.$router.push(ctx.functionItems[index].url);
+            },
+            selectModule:function(index){
+              this.cIndex = index
+              this.functionItems = this.passport[index].children
+            },
             toggleClick() {
                 if (this.spanLeft === 5) {
                     this.spanLeft = 2;
@@ -179,6 +170,11 @@
                     this.spanLeft = 5;
                     this.spanRight = 19;
                 }
+                setTimeout(()=>{
+                  const e = document.createEvent("Event")
+                  e.initEvent("resize", true, true);
+                  window.dispatchEvent(e);
+                },200)
             },
             routeTo(e) {
                 //console.log(e);
