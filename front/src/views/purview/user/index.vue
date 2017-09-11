@@ -14,25 +14,29 @@
 <script>
     import addView from './add.vue'
     import editView from './edit.vue';
-    import { mapActions,mapState } from 'vuex'
 
     export default {
         components:{
             addView,editView
         },
         mounted(){
-            this.getUserItems(1,10)
+          const ctx = this
+          const pageNo = 1
+          const bookKey ='user'
+          this.$store.dispatch('queryPage',{bookKey,pageNo}).then(res =>{
+            ctx.userItems = res.data.values.rows
+            console.log(res)
+          })
         },
         computed: {
-            ...mapState({
-                userItems: ({user}) => user.userItems,
-                total: ({user}) => user.total,
-                pageNo: ({user}) => user.pageNo,
-                pageSize: ({user}) => user.pageSize
-            })
+
         },
         data () {
             return {
+                total:0,
+                pageNo:1,
+                pageSize:10,
+                userItems:[],
                 curUserItem:{},
                 isShowAdd:false,
                 isShowEdit:false,
@@ -105,6 +109,9 @@
             }
         },
         methods: {
+            getUserItems:function(){
+
+            },
             editInit(index){
                this.curUserItem=this.userItems[index]
                this.isShowEdit=true
@@ -124,10 +131,7 @@
                     }
                 })
 
-            },
-            ...mapActions([
-                'getUserItems'
-            ])
+            }
         }
     }
 </script>

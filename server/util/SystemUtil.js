@@ -14,11 +14,11 @@ class SystemUtil {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10))
   }
   /* 统一返回格式标砖 */
-  static createResult ({success, message, data}) {
+  static createResult ({success, message, values}) {
     return {
       success: success,
       message: message,
-      values: data  ?  data :{}
+      values: values  ?  values :{}
     }
   }
   /* 检查密码 */

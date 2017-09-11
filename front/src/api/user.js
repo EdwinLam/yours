@@ -1,19 +1,54 @@
-import Util from '../libs/util';
+import fetch from '@/utils/fetch'
 
-export default {
-    queryUserByPage (pageNo,pageSize) {
-        return Util.ajax.get('/api/user/queryUserByPage', {params:{pageNo:pageNo,pageSize:pageSize}});
-    },
-    isExistPhone (phone) {
-        return Util.ajax.get('/api/user/isExistPhone', {params:{phone:phone}});
-    },
-    create(name,phone,password){
-        return Util.ajax.post('/api/user/create', {name:name,password:password,phone:phone});
-    },
-    delete(id){
-        return Util.ajax.delete('/api/user/'+id)
-    },
-    update(id,name){
-        return Util.ajax.post('/api/user/'+id,{name:name})
-    }
+
+export function queryPage({pageNo,pageSize}) {
+  const data = {
+    pageNo,
+    pageSize
+  }
+  return fetch({
+    url: '/api/user/queryUserByPage',
+    method: 'get',
+    data
+  })
+}
+
+export function isExistPhone(phone) {
+  const data = {
+    phone
+  }
+  return fetch({
+    url: '/api/user/isExistPhone',
+    method: 'get',
+    data
+  })
+}
+
+export function create(name,password,phone) {
+  const data = {
+    name,
+    password,
+    phone
+  }
+  return fetch({
+    url: '/api/user/create',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteById(id) {
+  return fetch({
+    url: '/api/user/'+id,
+    method: 'delete'
+  })
+}
+
+export function updateById(id,name) {
+    const data={name}
+  return fetch({
+    url: '/api/user/'+id,
+    method: 'post',
+    data
+  })
 }

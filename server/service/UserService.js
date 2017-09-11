@@ -23,7 +23,7 @@ class UserService extends BaseService {
     })
     result.pageNo = pageNo
     result.pageSize = pageSize
-    ctx.body = this.createResult({success: true, message: '成功获取', value: result})
+    ctx.body = SystemUtil.createResult({success: true, message: '成功获取', values: result})
   }
 
   /**
@@ -56,7 +56,7 @@ class UserService extends BaseService {
       token: SystemUtil.createJwt(userInfo.id, userInfo.name),
       userInfo: userInfo
     } : null
-    ctx.body = SystemUtil.createResult({success: isSuccess, message: message, data: value})
+    ctx.body = SystemUtil.createResult({success: isSuccess, message: message, values: value})
   }
 
   /**
@@ -81,7 +81,7 @@ class UserService extends BaseService {
         password: SystemUtil.enCodePassword(password),
         phone: phone
       })
-      ctx.body = SystemUtil.createResult({success: true, message: message, value: value})
+      ctx.body = SystemUtil.createResult({success: true, message: message, values: value})
     } else {
       const message = '已存在' + phone + '手机的用户'
       ctx.body = SystemUtil.createResult({success: false, message: message})
@@ -116,7 +116,7 @@ class UserService extends BaseService {
 
   async getUserInfo (ctx) {
     let  userInfo = await this.Dao.findOne({where: {id: ctx.state.user.id}})
-    ctx.body =SystemUtil.createResult({success: true, message: '获取成功', data:{
+    ctx.body =SystemUtil.createResult({success: true, message: '获取成功', values:{
       userInfo:userInfo
     }})
   }

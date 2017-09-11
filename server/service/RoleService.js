@@ -20,7 +20,7 @@ class UserService extends BaseService {
     })
     result.pageNo = pageNo
     result.pageSize = pageSize
-    ctx.body = this.createResult({success: true, message: '成功获取', value: result})
+    ctx.body = this.createResult({success: true, message: '成功获取', values: result})
   }
   /*
    * 删除角色
