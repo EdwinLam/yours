@@ -1,7 +1,7 @@
 /**
  * Created by edwin on 2017/9/8.
  */
-import { translateTreeData,objectMerge } from '@/utils/baseUtil'
+import { translateTreeData,objectMerge } from '@/utils/base'
 
 
 const autoSort= function(sourceData){

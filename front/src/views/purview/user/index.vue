@@ -14,22 +14,16 @@
 <script>
     import addView from './add.vue'
     import editView from './edit.vue';
+    import { formatDate } from '@/utils/base'
 
     export default {
         components:{
             addView,editView
         },
         mounted(){
-          const ctx = this
-          const pageNo = 1
-          const bookKey ='user'
-          this.$store.dispatch('queryPage',{bookKey,pageNo}).then(res =>{
-            ctx.userItems = res.data.values.rows
-            console.log(res)
-          })
+          this.getUserItems(1)
         },
         computed: {
-
         },
         data () {
             return {
@@ -53,7 +47,7 @@
                         title: '创建时间',
                         key: 'createdAt',
                         render: (h, params) => {
-                            return h('div', this.$Util.formatDate(this.userItems[params.index].createdAt));
+                            return h('div', formatDate(this.userItems[params.index].createdAt));
                         }
                     },
                     {
@@ -109,8 +103,13 @@
             }
         },
         methods: {
-            getUserItems:function(){
-
+            getUserItems:function(pageNo){
+              const ctx = this
+              const bookKey ='user'
+              this.$store.dispatch('queryPage',{bookKey,pageNo}).then(res =>{
+                ctx.userItems = res.data.values.rows
+                ctx.total = res.data.values.count
+              })
             },
             editInit(index){
                this.curUserItem=this.userItems[index]
