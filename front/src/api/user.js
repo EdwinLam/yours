@@ -21,10 +21,9 @@ export function isExistPhone({phone}) {
   })
 }
 
-export function add({name,password,phone}) {
-  console.log({name,password,phone})
+export function add({nickname,password,phone}) {
   const data = {
-    name,
+    nickname,
     password,
     phone
   }

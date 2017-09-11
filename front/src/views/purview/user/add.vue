@@ -22,6 +22,7 @@
 <script>
     import Icon from "../../../../node_modules/iview/src/components/icon/icon";
     import { mapActions } from 'vuex'
+    import iView from 'iview';
 
     export default {
         components: {Icon},
@@ -80,14 +81,14 @@
                 this.$refs[name].validate(async (valid) => {
                     if (valid) {
                         this.loading=true
-                        const data = {name:this.formValidate.name, phone:this.formValidate.phone, password:this.formValidate.password}
+                        const data = {nickname:this.formValidate.name, phone:this.formValidate.phone, password:this.formValidate.password}
                         const bookKey = 'user'
                         ctx.add({bookKey,data}).then( res =>{
-                        console.log(res)
-                        this.$emit('input', false)
-                        this.loading=false
-                        this.handleReset("formValidate")
-                      })
+                            this.$emit('input', false)
+                            this.loading=false
+                            this.handleReset("formValidate")
+                            iView.Message.success(res.data.message)
+                        })
                     } else {
                         this.$Message.error('表单验证失败!');
                     }

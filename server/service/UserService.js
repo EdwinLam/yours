@@ -2,7 +2,6 @@ const BaseService = require('./BaseService')
 const StringUtil = require('../util/StringUtil.js')
 const SystemUtil = require('../util/SystemUtil.js')
 
-
 class UserService extends BaseService {
   constructor () {
     super('ys_user')
@@ -66,7 +65,7 @@ class UserService extends BaseService {
    * @param {number} password 密码
    */
   async createUser (ctx) {
-    let name = ctx.request.body.name
+    let nickname = ctx.request.body.nickname
     let phone = ctx.request.body.phone
     let password = ctx.request.body.password
     if (StringUtil.someNull([phone, password])) {
@@ -76,9 +75,9 @@ class UserService extends BaseService {
     console.log(userInfo)
     const isExistsUser = userInfo != null
     if (!isExistsUser) {
-      const message = '新建用户' + name + '成功'
+      const message = '新建用户' + nickname + '成功'
       const value = await this.Dao.create({
-        name: name,
+        nickname: nickname,
         password: SystemUtil.enCodePassword(password),
         phone: phone
       })
@@ -112,7 +111,7 @@ class UserService extends BaseService {
     const count = await this.Dao.destroy({where: {id: ctx.params.id}})
     const isSuccess = count > 0
     const message = isSuccess ? '删除数据成功' : '删除数据失败'
-    ctx.body = this.createResult({success: isSuccess, message: message})
+    ctx.body = SystemUtil.createResult({success: isSuccess, message: message})
   }
 
   async getUserInfo (ctx) {

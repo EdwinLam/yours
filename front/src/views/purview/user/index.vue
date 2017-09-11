@@ -16,6 +16,7 @@
     import editView from './edit.vue'
     import { mapActions } from 'vuex'
     import { formatDate } from '@/utils/base'
+    import iView from 'iview';
 
     export default {
         components:{
@@ -105,7 +106,7 @@
         },
         methods: {
           ...mapActions([
-            'queryPage','deleteUser'
+            'queryPage','deleteById'
           ]),
             getUserItems:function(pageNo){
               const ctx = this
@@ -134,6 +135,7 @@
                       const bookKey ='user'
                       const id = this.userItems[index].id
                       ctx.deleteById({bookKey,id}).then(() =>{
+                        iView.Message.success(res.data.message)
                         ctx.userItems.splice(index,1);
                       })
                     }
