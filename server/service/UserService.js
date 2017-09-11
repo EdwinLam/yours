@@ -32,7 +32,7 @@ class UserService extends BaseService {
    */
   async isExistPhone (ctx) {
     let phone = ctx.query.phone
-    const user = await this.findOne({where: {phone: phone}})
+    const user = await this.Dao.findOne({where: {phone: phone}})
     const isExists = user != null
     const message = (isExists ? '存在' : '不存在') + phone + '手机的用户'
     ctx.body = SystemUtil.createResult({success: isExists, message: message})
@@ -73,8 +73,9 @@ class UserService extends BaseService {
       ctx.body = SystemUtil.createResult({success: false, message: '用户名和密码不能为空'})
     }
     const userInfo = await this.Dao.findOne({where: {phone: phone}})
+    console.log(userInfo)
     const isExistsUser = userInfo != null
-    if (isExistsUser) {
+    if (!isExistsUser) {
       const message = '新建用户' + name + '成功'
       const value = await this.Dao.create({
         name: name,

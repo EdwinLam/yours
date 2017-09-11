@@ -21,6 +21,7 @@
 </template>
 <script>
     import Icon from "../../../../node_modules/iview/src/components/icon/icon";
+    import { mapActions } from 'vuex'
 
     export default {
         components: {Icon},
@@ -31,9 +32,13 @@
             }
         },
         data () {
+            const ctx = this
             const validatePhoneCheck = async (rule, value, callback) => {
-                const isExistPhone = await this.$store.dispatch('isExistPhone',value)
-                isExistPhone?callback(new Error('系统中已存在该手机号')):callback()
+              const data = {phone:value}
+              const bookKey = 'user'
+              const method = 'isExistPhone'
+              const res =await ctx.custom({bookKey,method,data})
+              res.data.success?callback(new Error('系统中已存在该手机号')):callback()
             }
             return {
                 loading:false,
@@ -60,6 +65,9 @@
             }
         },
         methods: {
+          ...mapActions([
+            'add','custom'
+          ]),
             ok () {
                 this.handleSubmit("formValidate")
             },
@@ -68,14 +76,18 @@
                 this.handleReset("formValidate")
             },
             handleSubmit (name) {
+                const ctx = this
                 this.$refs[name].validate(async (valid) => {
                     if (valid) {
                         this.loading=true
-                        const success=await this.$store.dispatch('create', {name:this.formValidate.name, phone:this.formValidate.phone, password:this.formValidate.password})
-                        if(success)
-                            this.$emit('input', false)
+                        const data = {name:this.formValidate.name, phone:this.formValidate.phone, password:this.formValidate.password}
+                        const bookKey = 'user'
+                        ctx.add({bookKey,data}).then( res =>{
+                        console.log(res)
+                        this.$emit('input', false)
                         this.loading=false
                         this.handleReset("formValidate")
+                      })
                     } else {
                         this.$Message.error('表单验证失败!');
                     }

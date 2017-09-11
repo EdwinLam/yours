@@ -13,7 +13,8 @@
 </template>
 <script>
     import addView from './add.vue'
-    import editView from './edit.vue';
+    import editView from './edit.vue'
+    import { mapActions } from 'vuex'
     import { formatDate } from '@/utils/base'
 
     export default {
@@ -103,10 +104,13 @@
             }
         },
         methods: {
+          ...mapActions([
+            'queryPage','deleteUser'
+          ]),
             getUserItems:function(pageNo){
               const ctx = this
               const bookKey ='user'
-              this.$store.dispatch('queryPage',{bookKey,pageNo}).then(res =>{
+              ctx.queryPage({bookKey,pageNo}).then(res =>{
                 ctx.userItems = res.data.values.rows
                 ctx.total = res.data.values.count
               })
@@ -118,15 +122,20 @@
             show (index) {
                 this.$Modal.info({
                     title: '用户信息',
-                    content: `姓名：${this.userItems[index].nickname}<br>创建日期：${this.$Util.formatDate(this.userItems[index].createdAt)}`
+                    content: `姓名：${this.userItems[index].nickname}<br>创建日期：${formatDate(this.userItems[index].createdAt)}`
                 })
             },
             remove (index) {
-                this.$Modal.confirm({
+              const ctx = this
+              ctx.$Modal.confirm({
                     title: '确认对话框标题',
-                    content: '<p>是否删除用户'+this.userItems[index].name+'</p>',
+                    content: '<p>是否删除用户'+ctx.userItems[index].nickname+'</p>',
                     onOk: async () => {
-                        await this.$store.dispatch('deleteUser', this.userItems[index].id)
+                      const bookKey ='user'
+                      const id = this.userItems[index].id
+                      ctx.deleteById({bookKey,id}).then(() =>{
+                        ctx.userItems.splice(index,1);
+                      })
                     }
                 })
 

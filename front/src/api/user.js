@@ -13,18 +13,16 @@ export function queryPage({pageNo,pageSize}) {
   })
 }
 
-export function isExistPhone(phone) {
-  const data = {
-    phone
-  }
+export function isExistPhone({phone}) {
   return fetch({
     url: '/api/user/isExistPhone',
     method: 'get',
-    data
+    params: { phone }
   })
 }
 
-export function create(name,password,phone) {
+export function add({name,password,phone}) {
+  console.log({name,password,phone})
   const data = {
     name,
     password,
@@ -37,14 +35,14 @@ export function create(name,password,phone) {
   })
 }
 
-export function deleteById(id) {
+export function deleteById({id}) {
   return fetch({
     url: '/api/user/'+id,
     method: 'delete'
   })
 }
 
-export function updateById(id,name) {
+export function updateById({id,name}) {
     const data={name}
   return fetch({
     url: '/api/user/'+id,
