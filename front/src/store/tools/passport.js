@@ -1,7 +1,7 @@
 /**
  * Created by edwin on 2017/9/8.
  */
-import { translateTreeData,objectMerge } from '@/utils/base'
+import { objectMerge } from '@/utils/base'
 
 
 const autoSort= function(sourceData){
@@ -15,39 +15,39 @@ const autoSort= function(sourceData){
   })
 }
 
-const collectMap = function(sourceData,collectArry,pathChain,parentItem){
-  let children = []
+const parsePassport = function(sourceData,level) {
+  var hash = {}
+  var filterSourceData = []
+  var result = []
   sourceData.forEach(function(el){
-    const curPathChain = el.level!=0?((pathChain?pathChain:'')+"/" + el.path):''
-    if(el.level === 2){
-      children.push(objectMerge(el,{name:el.name,url:curPathChain,path:el.path,component: (resolve) => require(['@/views'+curPathChain+'/index.vue'], resolve)}))
-    }
-    if(el.children){
-      collectMap(el.children,collectArry,curPathChain,el)
+    el.children = []
+    if(el.level >= level) {
+      filterSourceData.push(el)
+      hash[el.code] = el
     }
   })
-  if(children.length&&parentItem){
-    collectArry.push({
-      name: parentItem.name,
-      path: pathChain?pathChain:"/",
-      component: (resolve) => require(['@/views/index.vue'], resolve),
-      children: children
-    })
-  }
+  filterSourceData.forEach(function(el){
+      var parentEl = hash[el.pCode]
+      if(parentEl) {
+        parentEl.children.push(objectMerge(el,{component: (resolve) => require(['@/views'+el.path+'/index.vue'], resolve)}))
+      }else{
+        result.push(objectMerge(el,{component: (resolve) => require(['@/views/index.vue'], resolve)}))
+      }
+  })
+  return result
 }
 
 export function getPassport(auth) {
    auth=[
-    {code:1,name:'管理后台',path:'admin',sort:1,pCode:0,level:0},
-    {code:2,name:'权限管理',path:'purview',sort:1,pCode:1,level:1},
-    {code:5,name:'分组管理',path:'group',sort:4,pCode:2,level:2},
-    {code:3,name:'用户管理',path:'user',sort:1,pCode:2,level:2},
-    {code:3,name:'角色管理',path:'role',sort:2,pCode:2,level:2},
-    {code:4,name:'功能管理',path:'function',sort:3,pCode:2,level:2}
+    {code:1,name:'管理后台',path:'/admin',sort:1,pCode:0,level:0},
+    {code:7,name:'cd管理',path:'/cd',sort:2,pCode:1,level:1},
+    {code:2,name:'权限管理',path:'/purview',sort:1,pCode:1,level:1},
+    {code:5,name:'分组管理',path:'/purview/group',sort:4,pCode:2,level:2},
+    {code:3,name:'用户管理',path:'/purview/user',sort:1,pCode:2,level:2},
+    {code:3,name:'角色管理',path:'/purview/role',sort:2,pCode:2,level:2},
+    {code:4,name:'功能管理',path:'/purview/function',sort:3,pCode:2,level:2}
   ]
-  let sourceData = translateTreeData(auth,'code','pCode','children')
-  let mapArray = []
-  collectMap(sourceData,mapArray)
+  let mapArray = parsePassport(auth,1)
   autoSort(mapArray)
   return mapArray
 }

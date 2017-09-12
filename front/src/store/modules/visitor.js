@@ -50,7 +50,7 @@ const mutations = {
   },
   [types.VISITOR_FORGET_ME] (state) {
     state.user = {}
-    state.auth = []
+    state.passport = []
     state.knowNothing = true
     removeToken()
   }

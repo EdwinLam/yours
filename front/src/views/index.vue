@@ -101,8 +101,8 @@
                 </div>
                 <div class="layout-breadcrumb">
                     <Breadcrumb>
-                        <!--<Breadcrumb-item>{{moduleName}}</Breadcrumb-item>-->
-                        <!--<Breadcrumb-item>{{functionName}}</Breadcrumb-item>-->
+                        <Breadcrumb-item>{{moduleName}}</Breadcrumb-item>
+                        <Breadcrumb-item>{{functionName}}</Breadcrumb-item>
                         <!--<Breadcrumb-item>{{detailName}}</Breadcrumb-item>-->
                     </Breadcrumb>
                 </div>
@@ -129,6 +129,8 @@
 
         data() {
             return {
+                moduleName:'',
+                functionName:'',
                 cIndex:0,
                 functionItems:[],
                 spanLeft: 5,
@@ -139,9 +141,15 @@
       created() {
         const ctx = this
         this.passport.forEach(function(el,index){
-          if(ctx.$route.path.indexOf(el.path) != -1) {
+          if(ctx.$route.path.indexOf(el.path) !== -1) {
+            ctx.moduleName = el.name
             ctx.cIndex = index
             ctx.functionItems = el.children
+          }
+        })
+        ctx.functionItems.forEach(function(el){
+          if(ctx.$route.path==el.path){
+            ctx.functionName = el.name
           }
         })
       },
@@ -156,11 +164,12 @@
         methods: {
             selectFunction:function(index){
               const ctx = this
-              this.$router.push(ctx.functionItems[index].url);
+              this.$router.push(ctx.functionItems[index].path)
+              ctx.functionName = ctx.functionItems[index].name
             },
             selectModule:function(index){
               this.cIndex = index
-              this.functionItems = this.passport[index].children
+              this.moduleName = this.passport[index].name
             },
             toggleClick() {
                 if (this.spanLeft === 5) {
@@ -175,10 +184,6 @@
                   e.initEvent("resize", true, true);
                   window.dispatchEvent(e);
                 },200)
-            },
-            routeTo(e) {
-                //console.log(e);
-                this.$router.push(e);
             }
         }
     }
