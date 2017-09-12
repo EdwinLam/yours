@@ -35,6 +35,17 @@ const actions = {
       })
     })
   },
+  /*修改操作*/
+  async update({commit}, {bookKey ,data}) {
+    const book = require('@/api/'+bookKey)
+    return new Promise((resolve, reject) => {
+      book.updateById(data).then(res => {
+        resolve(res)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   /*删除操作*/
   async deleteById({commit}, {bookKey ,id}) {
     const book = require('@/api/'+bookKey)

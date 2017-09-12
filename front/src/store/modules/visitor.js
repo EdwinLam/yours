@@ -1,5 +1,5 @@
 import { getUserInfo ,logout} from '@/api/auth'
-import { getToken, setToken, removeToken } from '@/utils/authUtil'
+import { getToken, setToken, removeToken } from '@/utils/auth'
 import { getPassport } from '@/store/tools/passport'
 import router from '../../router';
 
@@ -32,6 +32,7 @@ const actions = {
           const token = getToken()
           commit(types.VISITOR_GET_PERMIT,{user,token,auth})
           router.addRoutes(state.passport) // 动态添加可访问路由表
+          router.addRoutes([{ path: '*', redirect: '/404' }])
         }).catch(() => {
           commit(types.VISITOR_FORGET_ME)
         })

@@ -11,22 +11,12 @@ const routers = [
     component: (resolve) => require(['@/views/login/index.vue'], resolve)
   },
   {
-    path: '/weiboLogin',
-    component: (resolve) => require(['@/views/weiboLogin.vue'], resolve)
+    path: '/404',
+    component: (resolve) => require(['@/views/404.vue'], resolve)
   },
   {
-    path: '/index',
-    component: (resolve) => require(['@/views/index.vue'], resolve),
-    children: [
-      {
-        path: '',
-        component: resolve => require(['@/views/user/list.vue'], resolve)
-      },
-      {
-        path: '/user',
-        component: resolve => require(['@/views/user/list.vue'], resolve)
-      }
-    ]
+    path: '/weiboLogin',
+    component: (resolve) => require(['@/views/weiboLogin.vue'], resolve)
   }
 
 ]
