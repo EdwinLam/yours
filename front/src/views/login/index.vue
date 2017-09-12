@@ -77,14 +77,14 @@
     },
     methods: {
       handleSubmit(name) {
-        const _this=this;
-        _this.$refs[name].validate(async (valid) => {
+        const ctx = this;
+        ctx.$refs[name].validate(async (valid) => {
           if (valid) {
-            _this.$store.dispatch('checkIdentity', this.formInline).then((res) => {
+            ctx.$store.dispatch('checkIdentity', this.formInline).then((res) => {
               const user = res.data.values.userInfo
               const token = res.data.values.token
               const auth = res.data.values.auth
-              _this.$store.commit('VISITOR_GET_PERMIT',{user,token,auth})
+              ctx.$store.commit('VISITOR_GET_PERMIT',{user,token,auth})
               iView.Message.success(res.data.message)
               router.push('/purview/user')
             }).catch(() => {

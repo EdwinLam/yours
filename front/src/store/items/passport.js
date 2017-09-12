@@ -3,7 +3,6 @@
  */
 import { objectMerge } from '@/utils/base'
 
-
 const autoSort= function(sourceData){
   sourceData.sort(function(a,b){
     return a.sort - b.sort
@@ -15,10 +14,25 @@ const autoSort= function(sourceData){
   })
 }
 
+const findOrigin = function(sourceData){
+  let origin =''
+  sourceData.every(function (el) {
+    if(el.level == 2){
+      origin=el.path
+    }else if(el.children){
+      origin=findOrigin(el.children)
+    }
+    if(origin !== '') return false
+    else return true
+  })
+  return origin
+}
+
 const parsePassport = function(sourceData,level) {
-  var hash = {}
-  var filterSourceData = []
-  var result = []
+  let hash = {}
+  let filterSourceData = []
+  let list = []
+  let origin = ''
   sourceData.forEach(function(el){
     el.children = []
     if(el.level >= level) {
@@ -27,14 +41,16 @@ const parsePassport = function(sourceData,level) {
     }
   })
   filterSourceData.forEach(function(el){
-      var parentEl = hash[el.pCode]
+      let parentEl = hash[el.pCode]
       if(parentEl) {
         parentEl.children.push(objectMerge(el,{component: (resolve) => require(['@/views'+el.path+'/index.vue'], resolve)}))
       }else{
-        result.push(objectMerge(el,{component: (resolve) => require(['@/views/index.vue'], resolve)}))
+        list.push(objectMerge(el,{component: (resolve) => require(['@/views/index.vue'], resolve)}))
       }
   })
-  return result
+  autoSort(list)
+  origin = findOrigin(list)
+  return {list,origin}
 }
 
 export function getPassport(auth) {
@@ -47,7 +63,6 @@ export function getPassport(auth) {
     {code:3,name:'角色管理',path:'/purview/role',sort:2,pCode:2,level:2},
     {code:4,name:'功能管理',path:'/purview/function',sort:3,pCode:2,level:2}
   ]
-  let mapArray = parsePassport(auth,1)
-  autoSort(mapArray)
-  return mapArray
+  const passport = parsePassport(auth,1)
+  return passport
 }

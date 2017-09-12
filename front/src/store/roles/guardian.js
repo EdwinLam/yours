@@ -1,4 +1,5 @@
 import { login} from '@/api/auth'
+import { getToken} from '@/utils/auth'
 
 const state = {
   whiteList : ['/login']
@@ -18,6 +19,19 @@ const actions = {
         reject(error)
       })
     })
+  },
+  showMeTheWay({commit},{passport,to, next}){
+    if(getToken()){
+      if(to.path === '/login'){
+        next({ path: passport.origin })
+      }else{
+        next()
+      }
+    }else if(to.path !== '/login'){
+      next({ path: '/login' })
+    }else{
+      next()
+    }
   }
 }
 const mutations = {

@@ -7,7 +7,7 @@
 
   export default {
     created() {
-      this.$store.dispatch('rememberMyself')
+//      this.$store.dispatch('rememberMyself')
     }
   };
 </script>

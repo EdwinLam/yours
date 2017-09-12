@@ -80,7 +80,7 @@
                     <div class="layout-logo-left">
                         <h3>RIPPLE</h3>
                     </div>
-                    <Menu-item  v-for="(item, index) in passport" :key="item.path" :name="index" >
+                    <Menu-item  v-for="(item, index) in passportList" :key="item.path" :name="index" >
                         <Icon type="person-stalker" :size="iconSize"></Icon>
                         <span class="layout-text">{{item.name}}</span>
                     </Menu-item>
@@ -140,7 +140,7 @@
         },
       created() {
         const ctx = this
-        this.passport.forEach(function(el,index){
+        this.passportList.forEach(function(el,index){
           if(ctx.$route.path.indexOf(el.path) !== -1) {
             ctx.moduleName = el.name
             ctx.cIndex = index
@@ -155,7 +155,7 @@
       },
         computed: {
             ...mapState({
-              passport: ({visitor}) => visitor.passport,
+              passportList: ({visitor}) => visitor.passport.list,
             }),
             iconSize() {
                 return this.spanLeft === 5 ? 14 : 24;
@@ -169,7 +169,7 @@
             },
             selectModule:function(index){
               this.cIndex = index
-              this.moduleName = this.passport[index].name
+              this.moduleName = this.passportList[index].name
             },
             toggleClick() {
                 if (this.spanLeft === 5) {

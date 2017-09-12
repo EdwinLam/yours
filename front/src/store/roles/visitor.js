@@ -1,16 +1,16 @@
 import { getUserInfo ,logout} from '@/api/auth'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { getPassport } from '@/store/tools/passport'
-import router from '../../router';
-
+import { getPassport } from '@/store/items/passport'
+import router from '../../router'
 import * as types from '../mutation-types'
 
 const state = {
   user: {},
   token:getToken(),
-  passport:[],
+  passport:{list:[],origin:''},
   knowNothing:true
 }
+
 const actions = {
   async leave({commit}) {
     return new Promise((resolve, reject) => {
@@ -23,21 +23,27 @@ const actions = {
       })
     })
   },
-  rememberMyself({state,commit}){
-    if (getToken()) { // 判断是否有token
-      if (state.knowNothing) { // 判断当前用户是否已拉取完user_info信息
+  async rememberMyself({state,commit}){
+    return new Promise((resolve, reject) => {
+      if (getToken()&&state.knowNothing) {
         getUserInfo(getToken()).then(res => {
-          const auth = res.data.values.auth
-          const user = res.data.values.userInfo
-          const token = getToken()
-          commit(types.VISITOR_GET_PERMIT,{user,token,auth})
-          router.addRoutes(state.passport) // 动态添加可访问路由表
-          router.addRoutes([{ path: '*', redirect: '/404' }])
+          if(state.knowNothing) {
+            const auth = res.data.values.auth
+            const user = res.data.values.userInfo
+            const token = getToken()
+            commit(types.VISITOR_GET_PERMIT, {user, token, auth})
+            router.addRoutes(state.passport.list)
+            router.addRoutes([{path: '*', redirect: '/404'}])
+          }
+          resolve()
         }).catch(() => {
           commit(types.VISITOR_FORGET_ME)
+          reject()
         })
+    }else{
+        resolve()
       }
-    }
+    })
   }
 }
 
@@ -49,9 +55,10 @@ const mutations = {
     state.knowNothing = false
     setToken(token)
   },
+
   [types.VISITOR_FORGET_ME] (state) {
     state.user = {}
-    state.passport = []
+    state.passport = {list:[],origin:''}
     state.knowNothing = true
     removeToken()
   }
