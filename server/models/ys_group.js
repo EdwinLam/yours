@@ -1,9 +1,9 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('ys_node', {
+  return sequelize.define('ys_group', {
     id: {
-      type: DataTypes.INTEGER(6),
+      type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
@@ -12,35 +12,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: true
     },
-    name: {
-      type: DataTypes.STRING(20),
-      allowNull: true
-    },
-    title: {
-      type: DataTypes.STRING(50),
-      allowNull: true
-    },
-    path: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    remark: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    sort: {
-      type: DataTypes.INTEGER(6),
-      allowNull: true
-    },
     pCode: {
-      type: DataTypes.INTEGER(6),
+      type: DataTypes.STRING(255),
       allowNull: true
     },
-    level: {
-      type: DataTypes.INTEGER(1),
-      allowNull: true
-    },
-    flag: {
+    name: {
       type: DataTypes.STRING(255),
       allowNull: true
     },
@@ -58,6 +34,6 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: '0'
     }
   }, {
-    tableName: 'ys_node'
+    tableName: 'ys_group'
   });
 };

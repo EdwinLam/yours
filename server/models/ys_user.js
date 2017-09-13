@@ -8,8 +8,16 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
+    code: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
     weiboUid: {
       type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
+    account: {
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     nickname: {

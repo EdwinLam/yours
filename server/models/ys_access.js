@@ -2,11 +2,11 @@
 
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('ys_access', {
-    roleId: {
+    roleCode: {
       type: DataTypes.INTEGER(6),
       allowNull: true
     },
-    nodeId: {
+    nodeCode: {
       type: DataTypes.INTEGER(6),
       allowNull: true
     },

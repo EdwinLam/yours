@@ -41,8 +41,8 @@ export function deleteById({id}) {
   })
 }
 
-export function updateById({id,name}) {
-    const data={name}
+export function updateById({id,nickname}) {
+    const data={nickname}
   return fetch({
     url: '/api/user/'+id,
     method: 'post',

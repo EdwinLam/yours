@@ -8,12 +8,16 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
+    code: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
     name: {
       type: DataTypes.STRING(255),
       allowNull: true
     },
-    pid: {
-      type: DataTypes.INTEGER(6),
+    pCode: {
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     createdAt: {

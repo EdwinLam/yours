@@ -1,6 +1,7 @@
 const BaseService = require('./BaseService')
 const StringUtil = require('../util/StringUtil.js')
 const SystemUtil = require('../util/SystemUtil.js')
+const uuidv1 = require('uuid/v1')
 
 class UserService extends BaseService {
   constructor () {
@@ -72,14 +73,17 @@ class UserService extends BaseService {
       ctx.body = SystemUtil.createResult({success: false, message: '用户名和密码不能为空'})
     }
     const userInfo = await this.Dao.findOne({where: {phone: phone}})
-    console.log(userInfo)
     const isExistsUser = userInfo != null
     if (!isExistsUser) {
       const message = '新建用户' + nickname + '成功'
       const value = await this.Dao.create({
         nickname: nickname,
         password: SystemUtil.enCodePassword(password),
-        phone: phone
+        phone: phone,
+        createdAt:new Date().getTime(),
+        updatedAt:new Date().getTime(),
+        status:1,
+        code:uuidv1()
       })
       ctx.body = SystemUtil.createResult({success: true, message: message, values: value})
     } else {
@@ -94,14 +98,14 @@ class UserService extends BaseService {
    * @param {String} name 用户名
    */
   async updateUser (ctx) {
-    const name = ctx.request.body.name
+    const nickname = ctx.request.body.nickname
     const id = ctx.params.id
-    console.log(name+"_"+id)
-    if (StringUtil.isNull(name)) {
+    const updatedAt = new Date().getTime()
+    if (StringUtil.isNull(nickname)) {
       ctx.body = SystemUtil.createResult({success: false, message: '名称不能为空'})
     }
-    await this.Dao.update({name}, {where: {id}})
-    ctx.body = this.createResult({success: true, message: '更新成功'})
+    await this.Dao.update({nickname,updatedAt}, {where: {id}})
+    ctx.body = SystemUtil.createResult({success: true, message: '更新成功'})
   }
 
   /*

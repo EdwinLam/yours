@@ -32,9 +32,6 @@ const actions = {
             const user = res.data.values.userInfo
             const token = getToken()
             commit(types.VISITOR_GET_PERMIT, {user, token, auth})
-            router.addRoutes(state.passport.list)
-            router.addRoutes([{path: '*', redirect: '/404'}])
-            router.addRoutes([{path: '/', redirect: state.passport.origin}])
           }
           resolve()
         }).catch(() => {
@@ -55,6 +52,9 @@ const mutations = {
     state.passport = getPassport(auth)
     state.knowNothing = false
     setToken(token)
+    router.addRoutes(state.passport.list)
+    router.addRoutes([{path: '*', redirect: '/404'}])
+    router.addRoutes([{path: '/', redirect: state.passport.origin}])
   },
 
   [types.VISITOR_FORGET_ME] (state) {
