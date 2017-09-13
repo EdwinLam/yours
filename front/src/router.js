@@ -3,10 +3,6 @@ import Vue from 'vue'
 Vue.use(VueRouter)
 const routers = [
   {
-    path: '/',
-    component: (resolve) => require(['@/views/index.vue'], resolve)
-  },
-  {
     path: '/login',
     component: (resolve) => require(['@/views/login/index.vue'], resolve)
   },

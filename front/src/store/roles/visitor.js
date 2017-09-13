@@ -34,6 +34,7 @@ const actions = {
             commit(types.VISITOR_GET_PERMIT, {user, token, auth})
             router.addRoutes(state.passport.list)
             router.addRoutes([{path: '*', redirect: '/404'}])
+            router.addRoutes([{path: '/', redirect: state.passport.origin}])
           }
           resolve()
         }).catch(() => {

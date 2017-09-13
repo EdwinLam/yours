@@ -1,8 +1,8 @@
 <template>
     <div>
         <Button type="ghost" @click="isShowAdd=true"><Icon type="person"></Icon>新增用户</Button>
-        <addView v-model="isShowAdd"/>
-        <editView v-model="isShowEdit" :userItem="curUserItem"/>
+        <addView v-model="isShowAdd" @afterAdd="afterAdd"/>
+        <editView v-model="isShowEdit" :userItem="curUserItem" @afterEdit="afterEdit"/>
 <Table :data="userItems" :columns="userColumns" stripe></Table>
 <div style="margin: 10px;overflow: hidden">
     <div style="float: right;">
@@ -108,12 +108,17 @@
           ...mapActions([
             'queryPage','deleteById'
           ]),
-            getUserItems:function(pageNo){
-              const ctx = this
+          afterEdit(){
+            this.getUserItems(this.pageNo)
+          },
+          afterAdd(){
+            this.getUserItems(1)
+          },
+            getUserItems(pageNo){
               const bookKey ='user'
-              ctx.queryPage({bookKey,pageNo}).then(res =>{
-                ctx.userItems = res.data.values.rows
-                ctx.total = res.data.values.count
+              this.queryPage({bookKey,pageNo}).then(res =>{
+                this.userItems = res.data.values.rows
+                this.total = res.data.values.count
               })
             },
             editInit(index){
@@ -127,15 +132,17 @@
                 })
             },
             remove (index) {
-              const ctx = this
-              ctx.$Modal.confirm({
+              const ctx =this
+              this.$Modal.confirm({
                     title: '确认对话框标题',
-                    content: '<p>是否删除用户'+ctx.userItems[index].nickname+'</p>',
+                    content: '<p>是否删除用户'+this.userItems[index].nickname+'</p>',
                     onOk: async () => {
                       const bookKey ='user'
                       const id = this.userItems[index].id
-                      ctx.deleteById({bookKey,id}).then(() =>{
+                      this.deleteById({bookKey,id}).then((res)=>{
+                        ctx.pageNo = ctx.total<=1 &&  ctx.pageNo>1?(ctx.pageNo-1):ctx.pageNo
                         iView.Message.success(res.data.message)
+                        ctx.getUserItems(ctx.pageNo)
                         ctx.userItems.splice(index,1);
                       })
                     }

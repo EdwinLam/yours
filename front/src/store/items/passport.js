@@ -56,7 +56,7 @@ const parsePassport = function(sourceData,level) {
 export function getPassport(auth) {
    auth=[
     {code:1,name:'管理后台',path:'/admin',sort:1,pCode:0,level:0},
-    {code:7,name:'cd管理',path:'/cd',sort:2,pCode:1,level:1},
+    {code:7,name:'微博管理',path:'/cd',sort:2,pCode:1,level:1},
     {code:2,name:'权限管理',path:'/purview',sort:1,pCode:1,level:1},
     {code:5,name:'分组管理',path:'/purview/group',sort:4,pCode:2,level:2},
     {code:3,name:'用户管理',path:'/purview/user',sort:1,pCode:2,level:2},

@@ -85,6 +85,7 @@
                         const bookKey = 'user'
                         ctx.add({bookKey,data}).then( res =>{
                             this.$emit('input', false)
+                            this.$emit('afterAdd')
                             this.loading=false
                             this.handleReset("formValidate")
                             iView.Message.success(res.data.message)

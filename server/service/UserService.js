@@ -96,10 +96,11 @@ class UserService extends BaseService {
   async updateUser (ctx) {
     const name = ctx.request.body.name
     const id = ctx.params.id
+    console.log(name+"_"+id)
     if (StringUtil.isNull(name)) {
       ctx.body = SystemUtil.createResult({success: false, message: '名称不能为空'})
     }
-    await this.Dao.update({name: name}, {where: {id: id}})
+    await this.Dao.update({name}, {where: {id}})
     ctx.body = this.createResult({success: true, message: '更新成功'})
   }
 
