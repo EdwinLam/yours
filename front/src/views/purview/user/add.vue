@@ -88,7 +88,7 @@
                             this.$emit('afterAdd')
                             this.loading=false
                             this.handleReset("formValidate")
-                            iView.Message.success(res.data.message)
+                            iView.Message.success(res.message)
                         })
                     } else {
                         this.$Message.error('表单验证失败!');

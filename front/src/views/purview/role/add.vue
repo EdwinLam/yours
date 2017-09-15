@@ -39,7 +39,7 @@
               const bookKey = 'user'
               const method = 'isExistPhone'
               const res =await ctx.custom({bookKey,method,data})
-              res.data.success?callback(new Error('系统中已存在该手机号')):callback()
+              res.success?callback(new Error('系统中已存在该手机号')):callback()
             }
             return {
                 loading:false,
@@ -88,7 +88,7 @@
                             this.$emit('afterAdd')
                             this.loading=false
                             this.handleReset("formValidate")
-                            iView.Message.success(res.data.message)
+                            iView.Message.success(res.message)
                         })
                     } else {
                         this.$Message.error('表单验证失败!');

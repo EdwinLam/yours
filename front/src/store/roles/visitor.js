@@ -2,7 +2,7 @@ import { getUserInfo ,logout} from '@/api/auth'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { getPassport } from '@/store/items/passport'
 import router from '../../router'
-import * as types from '../mutation-types'
+import * as types from '@/store/mutation-types'
 
 const state = {
   user: {},
@@ -28,8 +28,8 @@ const actions = {
       if (getToken()&&state.knowNothing) {
         getUserInfo(getToken()).then(res => {
           if(state.knowNothing) {
-            const auth = res.data.values.auth
-            const user = res.data.values.userInfo
+            const auth = res.values.auth
+            const user = res.values.userInfo
             const token = getToken()
             commit(types.VISITOR_GET_PERMIT, {user, token, auth})
           }

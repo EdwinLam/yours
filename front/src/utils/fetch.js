@@ -1,6 +1,7 @@
 import axios from 'axios'
 import iView from 'iview'
 import { getToken } from '@/utils/auth.js'
+import router from '@/router'
 
 
 // 创建axios实例
@@ -24,9 +25,11 @@ service.interceptors.request.use(config => {
 
 // respone拦截器
 service.interceptors.response.use(
-  response => response,
+  response => response.data,
+
   error => {
     iView.Message.error(error.message)
+    router.push({path: '/login'});
     return Promise.reject(error)
   }
 )

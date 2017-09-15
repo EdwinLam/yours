@@ -9,7 +9,8 @@ class UserService extends BaseService {
   }
   /**
    * 分页查询数据
-   * @param {number} phone 电话号码
+   * @param {pageNo} 当前页
+   * @param {pageNo} 总页数
    */
   async queryByPage (ctx) {
     let pageNo = parseInt(ctx.query.pageNo) || 1

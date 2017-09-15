@@ -44,7 +44,7 @@
                 userColumns: [
                     {
                         title: '名称',
-                        key: 'nickname'
+                        key: 'name'
                     },
                     {
                         title: '号码',
@@ -120,10 +120,10 @@
             this.getUserItems(1)
           },
             getUserItems(pageNo){
-              const bookKey ='user'
+              const bookKey ='role'
               this.queryPage({bookKey,pageNo}).then(res =>{
-                this.userItems = res.data.values.rows
-                this.total = res.data.values.count
+                this.userItems = res.values.rows
+                this.total = res.values.count
               })
             },
             editInit(index){
@@ -146,7 +146,7 @@
                       const id = this.userItems[index].id
                       this.deleteById({bookKey,id}).then((res)=>{
                         ctx.pageNo = ctx.total<=1 &&  ctx.pageNo>1?(ctx.pageNo-1):ctx.pageNo
-                        iView.Message.success(res.data.message)
+                        iView.Message.success(res.message)
                         ctx.getUserItems(ctx.pageNo)
                         ctx.userItems.splice(index,1);
                       })

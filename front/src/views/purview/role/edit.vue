@@ -58,12 +58,12 @@
                       const data = this.userInfo
                       const bookKey = 'user'
                       const res=await ctx.update({bookKey,data})
-                      if(res.data.success){
+                      if(res.success){
                         this.$emit('afterEdit', false)
                         this.$emit('input', false)
-                        this.$Message.success(res.data.message)
+                        this.$Message.success(res.message)
                       }else{
-                        this.$Message.error(res.data.message)
+                        this.$Message.error(res.message)
                       }
 
                       this.loading=false
