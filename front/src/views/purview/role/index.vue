@@ -8,10 +8,10 @@
         <div class="op-btn-menu"><Button type="ghost" @click="isShowAdd=true"><Icon type="person"></Icon>新增角色</Button></div>
         <addView v-model="isShowAdd" @afterAdd="afterAdd"/>
         <editView v-model="isShowEdit" :userItem="curUserItem" @afterEdit="afterEdit"/>
-<Table :data="userItems" :columns="userColumns" stripe></Table>
+<Table :data="roleItems" :columns="userColumns" stripe></Table>
 <div style="margin: 10px;overflow: hidden">
     <div style="float: right;">
-        <Page :total="total" :current="pageNo" :page-size="pageSize" @on-change="getUserItems"></Page>
+        <Page :total="total" :current="pageNo" :page-size="pageSize" @on-change="getRoleItems"></Page>
     </div>
 </div>
     </div>
@@ -28,7 +28,7 @@
             addView,editView
         },
         mounted(){
-          this.getUserItems(1)
+          this.getRoleItems(1)
         },
         computed: {
         },
@@ -37,7 +37,7 @@
                 total:0,
                 pageNo:1,
                 pageSize:10,
-                userItems:[],
+                roleItems:[],
                 curUserItem:{},
                 isShowAdd:false,
                 isShowEdit:false,
@@ -47,14 +47,10 @@
                         key: 'name'
                     },
                     {
-                        title: '号码',
-                        key: 'phone'
-                    },
-                    {
                         title: '创建时间',
                         key: 'createdAt',
                         render: (h, params) => {
-                            return h('div', formatDate(this.userItems[params.index].createdAt));
+                            return h('div', formatDate(this.roleItems[params.index].createdAt));
                         }
                     },
                     {
@@ -114,41 +110,41 @@
             'queryPage','deleteById'
           ]),
           afterEdit(){
-            this.getUserItems(this.pageNo)
+            this.getRoleItems(this.pageNo)
           },
           afterAdd(){
-            this.getUserItems(1)
+            this.getRoleItems(1)
           },
-            getUserItems(pageNo){
+            getRoleItems(pageNo){
               const bookKey ='role'
               this.queryPage({bookKey,pageNo}).then(res =>{
-                this.userItems = res.values.rows
+                this.roleItems = res.values.rows
                 this.total = res.values.count
               })
             },
             editInit(index){
-               this.curUserItem=this.userItems[index]
+               this.curUserItem=this.roleItems[index]
                this.isShowEdit=true
             },
             show (index) {
                 this.$Modal.info({
                     title: '用户信息',
-                    content: `姓名：${this.userItems[index].nickname}<br>创建日期：${formatDate(this.userItems[index].createdAt)}`
+                    content: `姓名：${this.roleItems[index].name}<br>创建日期：${formatDate(this.roleItems[index].createdAt)}`
                 })
             },
             remove (index) {
               const ctx =this
               this.$Modal.confirm({
                     title: '确认对话框标题',
-                    content: '<p>是否删除用户'+this.userItems[index].nickname+'</p>',
+                    content: '<p>是否删除用户'+this.roleItems[index].nickname+'</p>',
                     onOk: async () => {
-                      const bookKey ='user'
-                      const id = this.userItems[index].id
+                      const bookKey ='role'
+                      const id = this.roleItems[index].id
                       this.deleteById({bookKey,id}).then((res)=>{
                         ctx.pageNo = ctx.total<=1 &&  ctx.pageNo>1?(ctx.pageNo-1):ctx.pageNo
                         iView.Message.success(res.message)
-                        ctx.getUserItems(ctx.pageNo)
-                        ctx.userItems.splice(index,1);
+                        ctx.getRoleItems(ctx.pageNo)
+                        ctx.roleItems.splice(index,1);
                       })
                     }
                 })
