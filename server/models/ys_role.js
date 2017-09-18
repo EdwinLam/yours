@@ -20,6 +20,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: true
     },
+    pName: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
     createdAt: {
       type: DataTypes.TEXT,
       allowNull: true

@@ -2,11 +2,11 @@
     <div>
     <Modal v-model="isShowModal" title="新建角色" @on-cancel="cancel" ok-text="新建">
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80" >
-            <Form-item label="名称" prop="phone">
-                <Input v-model="formValidate.phone" placeholder="请输入名称" :disabled="loading"></Input>
+            <Form-item label="名称" prop="name">
+                <Input v-model="formValidate.name" placeholder="请输入名称" :disabled="loading"></Input>
             </Form-item>
             <Form-item label="所属角色">
-               <Tree :data="baseData"></Tree>
+               <Tree :data="baseData" @on-select-change="selectChange"></Tree>
             </Form-item>
         </Form>
         <div slot="footer">
@@ -29,15 +29,13 @@
                 return this.value
             }
         },
-        async mounted () {
-          const bookKey = 'role'
-          const method = 'queryRoleTree'
-          const res = await this.custom({bookKey, method})
-          console.log(res)
-          this.baseData = res.values
+
+         mounted () {
+          this.updateRole()
         },
         data () {
             return {
+              selectedRole:{},
               baseData: [],
                 loading:false,
                 formValidate: {
@@ -55,6 +53,17 @@
           ...mapActions([
             'add','custom'
           ]),
+          async updateRole(){
+            const bookKey = 'role'
+            const method = 'queryRoleTree'
+            const res = await this.custom({bookKey, method})
+            this.baseData = res.values
+            if(res.values.length)
+              this.selectedRole = res.values[0]
+          },
+          selectChange(array){
+            this.selectedRole=array.length?array[0]:{}
+          },
             ok () {
                 this.handleSubmit("formValidate")
             },
@@ -65,16 +74,20 @@
             handleSubmit (name) {
                 const ctx = this
                 this.$refs[name].validate(async (valid) => {
-                    if (valid) {
+                    if (valid && this.selectedRole.code) {
                         this.loading=true
-                        const data = {nickname:this.formValidate.name, phone:this.formValidate.phone, password:this.formValidate.password}
-                        const bookKey = 'user'
+                        const name = this.formValidate.name
+                        const pCode = this.selectedRole.code
+                        const pName = this.selectedRole.name
+                        const data = {name,pCode,pName}
+                        const bookKey = 'role'
                         ctx.add({bookKey,data}).then( res =>{
                             this.$emit('input', false)
                             this.$emit('afterAdd')
                             this.loading=false
                             this.handleReset("formValidate")
                             iView.Message.success(res.message)
+                            ctx.updateRole()
                         })
                     } else {
                         this.$Message.error('表单验证失败!');

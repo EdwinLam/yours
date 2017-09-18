@@ -1,5 +1,13 @@
 import fetch from '@/utils/fetch'
 
+export function add(data) {
+  return fetch({
+    url: '/api/role/create',
+    method: 'post',
+    data
+  })
+}
+
 
 export function queryPage({pageNo,pageSize}) {
   const data = {
