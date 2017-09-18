@@ -5,7 +5,7 @@
 </style>
 <template>
     <div>
-        <div class="op-btn-menu"><Button type="ghost" @click="isShowAdd=true"><Icon type="person"></Icon>新增用户</Button></div>
+        <div class="op-btn-menu"><Button type="ghost" @click="isShowAdd=true"><Icon type="person"></Icon>新增角色</Button></div>
         <addView v-model="isShowAdd" @afterAdd="afterAdd"/>
         <editView v-model="isShowEdit" :userItem="curUserItem" @afterEdit="afterEdit"/>
 <Table :data="userItems" :columns="userColumns" stripe></Table>

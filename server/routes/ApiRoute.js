@@ -12,6 +12,7 @@ router.get('/user/getUserInfo', (ctx) => UserService.getUserInfo(ctx))// 获取�
 
 /* 角色相关接口 */
 router.get('/role/queryByPage', (ctx) => RoleService.queryByPage(ctx))// 分页查询角色信息
-router.post('/role/create', (ctx) => RoleService.createUser(ctx))// 创建角色
+router.get('/role/queryRoleTree', (ctx) => RoleService.queryRoleTree(ctx))// 角色树状数据
+router.post('/role/create', (ctx) => RoleService.createRole(ctx))// 创建角色
 router.del('/role/:id', (ctx) => RoleService.destroy(ctx))// 删除角色
 module.exports = router

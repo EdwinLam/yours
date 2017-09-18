@@ -12,3 +12,10 @@ export function queryPage({pageNo,pageSize}) {
     data
   })
 }
+
+export function queryRoleTree() {
+  return fetch({
+    url: '/api/role/queryRoleTree',
+    method: 'get'
+  })
+}
