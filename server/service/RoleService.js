@@ -2,10 +2,9 @@ const BaseService = require('./BaseService')
 const StringUtil = require('../util/StringUtil.js')
 const SystemUtil = require('../util/SystemUtil.js')
 const _ = require('lodash');
-
 const uuidv1 = require('uuid/v1')
 
-class UserService extends BaseService {
+class RoleService extends BaseService {
   constructor () {
     super('ys_role')
   }
@@ -95,14 +94,14 @@ class UserService extends BaseService {
    * @param {Number} id 唯一id
    * @param {String} name 用户名
    */
-  async updateUser (ctx) {
-    const nickname = ctx.request.body.nickname
+  async updateRole (ctx) {
+    const name = ctx.request.body.name
     const id = ctx.params.id
     const updatedAt = new Date().getTime()
-    if (StringUtil.isNull(nickname)) {
+    if (StringUtil.isNull(name)) {
       ctx.body = SystemUtil.createResult({success: false, message: '名称不能为空'})
     }
-    await this.Dao.update({nickname,updatedAt}, {where: {id}})
+    await this.Dao.update({name,updatedAt}, {where: {id}})
     ctx.body = SystemUtil.createResult({success: true, message: '更新成功'})
   }
 
@@ -124,4 +123,4 @@ class UserService extends BaseService {
     }})
   }
 }
-module.exports = new UserService()
+module.exports = new RoleService()
