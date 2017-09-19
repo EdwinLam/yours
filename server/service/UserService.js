@@ -7,24 +7,6 @@ class UserService extends BaseService {
   constructor () {
     super('ys_user')
   }
-  /**
-   * 分页查询数据
-   * @param {number} phone 电话号码
-   */
-  async queryByPage (ctx) {
-    let pageNo = parseInt(ctx.query.pageNo) || 1
-    let pageSize = parseInt(ctx.query.pageSize) || 10
-    delete ctx.query.pageNo
-    delete ctx.query.pageSize
-    let result = await this.Dao.findAndCount({
-      where: ctx.query,
-      limit: pageSize,
-      offset: (pageNo - 1) * pageSize
-    })
-    result.pageNo = pageNo
-    result.pageSize = pageSize
-    ctx.body = SystemUtil.createResult({success: true, message: '成功获取', values: result})
-  }
 
   /**
    * 判断号码是否已经存在
@@ -106,17 +88,6 @@ class UserService extends BaseService {
     }
     await this.Dao.update({nickname,updatedAt}, {where: {id}})
     ctx.body = SystemUtil.createResult({success: true, message: '更新成功'})
-  }
-
-  /*
-   * 删除用户
-   * @param {Number} id 唯一id
-   */
-  async destroy (ctx) {
-    const count = await this.Dao.destroy({where: {id: ctx.params.id}})
-    const isSuccess = count > 0
-    const message = isSuccess ? '删除数据成功' : '删除数据失败'
-    ctx.body = SystemUtil.createResult({success: isSuccess, message: message})
   }
 
   async getUserInfo (ctx) {

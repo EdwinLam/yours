@@ -6,16 +6,16 @@ const uuidv1 = require('uuid/v1')
 
 class RoleService extends BaseService {
   constructor () {
-    super('ys_role')
+    super('ys_group')
   }
 
   /**
-   * 新建角色
-   * @param {String} pCode 父角色Code 根目录为0
-   * @param {String} pName 父角色名称
+   * 新建分组
+   * @param {String} pCode 父分组Code 根目录为0
+   * @param {String} pName 父分组名称
    * @param {name} password 角色名称
    */
-  async createRole (ctx) {
+  async createGroup (ctx) {
     const pCode = ctx.request.body.pCode
     const pName = ctx.request.body.pName
     const name = ctx.request.body.name
@@ -25,7 +25,7 @@ class RoleService extends BaseService {
     const roleInfo = await this.Dao.findOne({where: {pCode,name}})
     const isExistsRole = roleInfo != null
     if (!isExistsRole) {
-      const message = '新建角色' + name + '成功'
+      const message = '新建分组' + name + '成功'
       const createdAt = new Date().getTime()
       const updatedAt = new Date().getTime()
       const status = 1
@@ -35,17 +35,17 @@ class RoleService extends BaseService {
       })
       ctx.body = SystemUtil.createResult({success: true, message: message, values: value})
     } else {
-      const message = pName+'已存在' + name + '角色'
+      const message = pName+'已存在' + name + '分组'
       ctx.body = SystemUtil.createResult({success: false, message: message})
     }
   }
 
   /*
-   * 更新用户
+   * 更新分组
    * @param {Number} id 唯一id
    * @param {String} name 用户名
    */
-  async updateRole (ctx) {
+  async updateGroup (ctx) {
     const name = ctx.request.body.name
     const id = ctx.params.id
     const updatedAt = new Date().getTime()

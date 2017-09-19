@@ -29,7 +29,6 @@
         return this.value
       }
     },
-
     mounted () {
       this.updateRole()
     },
@@ -55,7 +54,7 @@
       ]),
       async updateRole(){
         const bookKey = 'role'
-        const method = 'queryRoleTree'
+        const method = 'queryTree'
         const res = await this.custom({bookKey, method})
         this.baseData = res.values
         if (res.values.length)

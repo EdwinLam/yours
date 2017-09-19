@@ -7,7 +7,7 @@ export function queryPage({pageNo,pageSize}) {
     pageSize
   }
   return fetch({
-    url: '/api/user/queryByPage',
+    url: '/api/user/queryPage',
     method: 'get',
     data
   })

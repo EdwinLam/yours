@@ -15,7 +15,7 @@ export function queryPage({pageNo,pageSize}) {
     pageSize
   }
   return fetch({
-    url: '/api/role/queryByPage',
+    url: '/api/role/queryPage',
     method: 'get',
     data
   })
