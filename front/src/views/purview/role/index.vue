@@ -12,7 +12,7 @@
             </Button>
         </div>
         <addView v-model="isShowAdd" @afterAdd="afterAdd" ref="addModal" />
-        <editView v-model="isShowEdit" :userItem="curUserItem" @afterEdit="afterEdit"/>
+        <editView v-model="isShowEdit" :userItem="curRoleItem" @afterEdit="afterEdit"/>
         <Table :data="roleItems" :columns="userColumns" stripe></Table>
         <div style="margin: 10px;overflow: hidden">
             <div style="float: right;">
@@ -42,7 +42,7 @@
         pageNo: 1,
         pageSize: 10,
         roleItems: [],
-        curUserItem: {},
+        curRoleItem: {},
         isShowAdd: false,
         isShowEdit: false,
         userColumns: [
@@ -127,7 +127,7 @@
         })
       },
       editInit(index){
-        this.curUserItem = this.roleItems[index]
+        this.curRoleItem = this.roleItems[index]
         this.isShowEdit = true
       },
       show (index) {
@@ -149,7 +149,7 @@
               iView.Message.success(res.message)
               ctx.getRoleItems(ctx.pageNo)
               ctx.roleItems.splice(index, 1)
-              var child = ctx.$refs.addModal //获取子组件实例
+              const child = ctx.$refs.addModal //获取子组件实例
               child.updateRole()
             })
           }

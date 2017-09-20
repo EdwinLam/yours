@@ -5,9 +5,15 @@
             <Form-item label="手机" prop="phone">
                 <Input v-model="formValidate.phone" placeholder="请输入手机" :disabled="loading"></Input>
             </Form-item>
+            <Form-item label="E-mail" prop="phone">
+                <Input v-model="formValidate.phone" placeholder="请输入E-mail" :disabled="loading"></Input>
+            </Form-item>
             <Form-item label="名称" prop="name">
                 <Input v-model="formValidate.name" placeholder="请输入名称" :disabled="loading"></Input>
             </Form-item>
+            <FormItem label="生日">
+                <DatePicker type="date" placeholder="选择日期" ></DatePicker>
+            </FormItem>
             <Form-item label="密码" prop="password">
                 <Input type="password" v-model="formValidate.password" placeholder="请输入密码" :disabled="loading"></Input>
             </Form-item>

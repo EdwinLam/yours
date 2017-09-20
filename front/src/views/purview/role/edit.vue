@@ -3,7 +3,7 @@
         <Modal v-model="isShowModal" title="编辑用户" @on-cancel="cancel" ok-text="保存修改">
             <Form ref="formValidate" :model="userInfo" :rules="ruleValidate" :label-width="80">
                 <Form-item label="名称" prop="name">
-                    <Input v-model="userInfo.nickname" placeholder="请输入名称" :disabled="loading"></Input>
+                    <Input v-model="userInfo.name" placeholder="请输入名称" :disabled="loading"></Input>
                 </Form-item>
 
             </Form>
@@ -20,13 +20,13 @@
 
   export default {
     components: {Icon},
-    props: ['value', 'userItem'],
+    props: ['value', 'roleItem'],
     computed: {
       isShowModal: function () {
         return this.value
       },
       userInfo: function () {
-        return {nickname: this.userItem.nickname, phone: this.userItem.phone, id: this.userItem.id}
+        return {nickname: this.roleItem.name, phone: this.roleItem.phone, id: this.roleItem.id}
       }
     },
     data () {
