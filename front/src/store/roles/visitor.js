@@ -1,6 +1,5 @@
 import {authApi} from '@/api/main'
 import AuthUtil from '@/utils/AuthUtil'
-
 import { getPassport } from '@/store/items/passport'
 import router from '@/router'
 import * as types from '@/store/mutation-types'

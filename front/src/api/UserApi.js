@@ -1,5 +1,5 @@
-import fetch from '@/utils/fetch'
-import BaseApi from '@/api/BaseApi'
+import fetch from './fetch'
+import BaseApi from './BaseApi'
 
 export default class UserApi extends BaseApi{
 
