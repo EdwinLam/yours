@@ -1,3 +1,4 @@
+import * as Books from  '@/api/main'
 
 const state = {
   defaultPageSize : 10
@@ -12,7 +13,7 @@ const actions = {
   /*获取用户列表*/
   async queryPage({commit,state}, {bookKey ,pageNo, pageSize,condition}) {
     pageSize=pageSize||state.defaultPageSize
-    let book = require('@/api/'+bookKey)
+    let book = Books[bookKey]
     const data = {
       pageNo,pageSize,condition
     }
@@ -26,7 +27,7 @@ const actions = {
   },
   /*新增操作*/
   async add({commit}, {bookKey ,data}) {
-    let book = require('@/api/'+bookKey)
+    let book = Books[bookKey]
     console.log(book)
     return new Promise((resolve, reject) => {
       book.add(data).then(res => {
@@ -38,7 +39,7 @@ const actions = {
   },
   /*修改操作*/
   async update({commit}, {bookKey ,data}) {
-    let book = require('@/api/'+bookKey)
+    let book = Books[bookKey]
     return new Promise((resolve, reject) => {
       book.updateById(data).then(res => {
         resolve(res)
@@ -49,7 +50,7 @@ const actions = {
   },
   /*删除操作*/
   async deleteById({commit}, {bookKey ,id}) {
-    let book = require('@/api/'+bookKey)
+    let book = Books[bookKey]
     const data = {
       id
     }
@@ -63,7 +64,7 @@ const actions = {
   },
   /*自定义操作*/
   async custom({commit}, {bookKey,method,data}) {
-    let book = require('@/api/'+bookKey)
+    let book = Books[bookKey]
     return new Promise((resolve, reject) => {
       book[method](data).then(res => {
         resolve(res)

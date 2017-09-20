@@ -1,6 +1,6 @@
 import axios from 'axios'
 import iView from 'iview'
-import { getToken } from '@/utils/auth.js'
+import AuthUtil from '@/utils/AuthUtil'
 import router from '@/router'
 
 
@@ -13,8 +13,8 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(config => {
   // Do something before request is sent
-  if (getToken()) {
-    config.headers['Authorization'] =  'Bearer ' + getToken()
+  if (AuthUtil.getToken()) {
+    config.headers['Authorization'] =  'Bearer ' + AuthUtil.getToken()
   }
   return config
 }, error => {

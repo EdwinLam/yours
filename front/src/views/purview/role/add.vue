@@ -53,7 +53,7 @@
         'add', 'custom'
       ]),
       async updateRole(){
-        const bookKey = 'role'
+        const bookKey = 'roleApi'
         const method = 'queryTree'
         const res = await this.custom({bookKey, method})
         this.baseData = res.values
@@ -92,7 +92,7 @@
             const pCode = this.selectedRole.code
             const pName = this.selectedRole.name
             const data = {name, pCode, pName}
-            const bookKey = 'role'
+            const bookKey = 'roleApi'
             ctx.add({bookKey, data}).then(res => {
               this.$emit('input', false)
               this.$emit('afterAdd')

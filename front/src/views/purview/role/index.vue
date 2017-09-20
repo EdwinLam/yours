@@ -120,7 +120,7 @@
         this.getRoleItems(1)
       },
       getRoleItems(pageNo){
-        const bookKey = 'role'
+        const bookKey = 'roleApi'
         this.queryPage({bookKey, pageNo}).then(res => {
           this.roleItems = res.values.rows
           this.total = res.values.count
@@ -142,7 +142,7 @@
           title: '确认对话框标题',
           content: '<p>是否删除用户' + this.roleItems[index].name + '</p>',
           onOk: async () => {
-            const bookKey = 'role'
+            const bookKey = 'roleApi'
             const id = this.roleItems[index].id
             this.deleteById({bookKey, id}).then((res) => {
               ctx.pageNo = ctx.total <= 1 && ctx.pageNo > 1 ? (ctx.pageNo - 1) : ctx.pageNo

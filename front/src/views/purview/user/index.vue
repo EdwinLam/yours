@@ -120,7 +120,7 @@
             this.getUserItems(1)
           },
             getUserItems(pageNo){
-              const bookKey ='user'
+              const bookKey ='userApi'
               this.queryPage({bookKey,pageNo}).then(res =>{
                 this.userItems = res.values.rows
                 this.total = res.values.count
@@ -142,7 +142,7 @@
                     title: '确认对话框标题',
                     content: '<p>是否删除用户'+this.userItems[index].nickname+'</p>',
                     onOk: async () => {
-                      const bookKey ='user'
+                      const bookKey ='userApi'
                       const id = this.userItems[index].id
                       this.deleteById({bookKey,id}).then((res)=>{
                         ctx.pageNo = ctx.total<=1 &&  ctx.pageNo>1?(ctx.pageNo-1):ctx.pageNo

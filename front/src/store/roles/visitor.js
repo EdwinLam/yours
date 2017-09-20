@@ -1,12 +1,13 @@
-import { getUserInfo ,logout} from '@/api/auth'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import {authApi} from '@/api/main'
+import AuthUtil from '@/utils/AuthUtil'
+
 import { getPassport } from '@/store/items/passport'
-import router from '../../router'
+import router from '@/router'
 import * as types from '@/store/mutation-types'
 
 const state = {
   user: {},
-  token:getToken(),
+  token:AuthUtil.getToken(),
   passport:{list:[],origin:''},
   knowNothing:true
 }
@@ -14,7 +15,7 @@ const state = {
 const actions = {
   async leave({commit}) {
     return new Promise((resolve, reject) => {
-      logout().then(response => {
+      authApi.logout().then(response => {
         commit(types.VISITOR_FORGET_ME)
         resolve(response)
       }).catch(error => {
@@ -25,12 +26,12 @@ const actions = {
   },
   async rememberMyself({state,commit}){
     return new Promise((resolve, reject) => {
-      if (getToken()&&state.knowNothing) {
-        getUserInfo(getToken()).then(res => {
+      if (AuthUtil.getToken()&&state.knowNothing) {
+        authApi.getUserInfo(AuthUtil.getToken()).then(res => {
           if(state.knowNothing) {
             const auth = res.values.auth
             const user = res.values.userInfo
-            const token = getToken()
+            const token = AuthUtil.getToken()
             commit(types.VISITOR_GET_PERMIT, {user, token, auth})
           }
           resolve()
@@ -51,7 +52,7 @@ const mutations = {
     state.token = token
     state.passport = getPassport(auth)
     state.knowNothing = false
-    setToken(token)
+    AuthUtil.setToken(token)
     router.addRoutes(state.passport.list)
     router.addRoutes([{path: '*', redirect: '/404'}])
     router.addRoutes([{path: '/', redirect: state.passport.origin}])
@@ -61,7 +62,7 @@ const mutations = {
     state.user = {}
     state.passport = {list:[],origin:''}
     state.knowNothing = true
-    removeToken()
+    AuthUtil.removeToken()
   }
 }
 

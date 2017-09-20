@@ -1,5 +1,5 @@
-import { login} from '@/api/auth'
-import { getToken} from '@/utils/auth'
+import {authApi} from '@/api/main'
+import AuthUtil from '@/utils/AuthUtil'
 
 const state = {
   whiteList : ['/login']
@@ -13,7 +13,7 @@ const getters = {
 const actions = {
   async checkIdentity({commit}, {phone, password}) {
     return new Promise((resolve, reject) => {
-      login(phone, password).then(res => {
+      authApi.login(phone, password).then(res => {
         resolve(res)
       }).catch(error => {
         reject(error)
@@ -21,7 +21,7 @@ const actions = {
     })
   },
   showMeTheWay({commit},{passport,to, next}){
-    if(getToken()){
+    if(AuthUtil.getToken()){
       if(to.path === '/login'){
         next({ path: passport.origin })
       }else{
