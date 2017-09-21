@@ -53,7 +53,7 @@
 <script>
   import iView from 'iview'
   import router from '../../router'
-  import { mapMutations } from 'vuex'
+  import { mapMutations,mapActions } from 'vuex'
   import * as types from '@/store/mutation-types'
   export default {
     mounted:function(){
@@ -77,19 +77,19 @@
       }
     },
     methods: {
+      ...mapActions([
+        'checkIdentity'
+      ]),
       ...mapMutations([
         types.VISITOR_GET_PERMIT,types.VISITOR_FORGET_ME
       ]),
       handleSubmit(name) {
-        const ctx = this;
+        const ctx = this
         ctx.$refs[name].validate(async (valid) => {
           if (valid) {
-            ctx.$store.dispatch('checkIdentity', this.formInline).then((res) => {
+            ctx.checkIdentity(this.formInline).then((res) => {
               if(res.success){
-                const user = res.values.userInfo
-                const token = res.values.token
-                const auth = res.values.auth
-                ctx[types.VISITOR_GET_PERMIT]({user,token,auth})
+                ctx[types.VISITOR_GET_PERMIT]({user:res.values.userInfo,token:res.values.token,auth:res.values.auth})
                 iView.Message.success(res.message)
                 router.push('/purview/user')
               }else{

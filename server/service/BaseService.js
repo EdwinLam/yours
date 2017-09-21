@@ -48,7 +48,7 @@ class BaseService {
     result.forEach(function(item){
       let el = item.dataValues
       el.children = []
-      el=_.merge({expand:true,selected:false,title:el.name},el)
+      el=_.merge({expand:true,selected:false,title:el.name,value:el.code,label:el.name},el)
       filterSourceData.push(el)
       hash[el.code] = el
     })

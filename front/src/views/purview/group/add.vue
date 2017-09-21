@@ -1,18 +1,18 @@
 <template>
     <div>
-        <Modal v-model="isShowModal" title="新建角色" @on-cancel="cancel" ok-text="新建">
+        <Modal v-model="isShowModal" title="新建分组" @on-cancel="cancel" ok-text="新建">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
                 <Form-item label="名称" prop="name">
                     <Input v-model="formValidate.name" placeholder="请输入名称" :disabled="loading"></Input>
                 </Form-item>
-                <Form-item label="所属角色">
+                <Form-item label="所属分组">
                     <Cascader :data="baseData" v-model="selectedRoles" change-on-select @on-change="onchange"
-                              not-found-text="暂无角色信息" ref="CascaderArea"></Cascader>
+                              not-found-text="暂无分组信息" ref="CascaderArea"></Cascader>
                 </Form-item>
             </Form>
             <div slot="footer">
                 <Button type="ghost" size="large" @click="cancel">取消</Button>
-                <Button type="primary" size="large" :loading="loading" @click="ok">新建角色</Button>
+                <Button type="primary" size="large" :loading="loading" @click="ok">新建分组</Button>
             </div>
         </Modal>
     </div>

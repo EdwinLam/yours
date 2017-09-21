@@ -7,8 +7,8 @@
     <div>
         <div class="op-btn-menu">
             <Button type="ghost" @click="isShowAdd=true">
-                <Icon type="person"></Icon>
-                新增角色
+                <Icon type="plus"></Icon>
+                新增
             </Button>
         </div>
         <addView v-model="isShowAdd" @afterAdd="afterAdd" ref="addModal" />
@@ -16,7 +16,7 @@
         <Table :data="roleItems" :columns="userColumns" stripe></Table>
         <div style="margin: 10px;overflow: hidden">
             <div style="float: right;">
-                <Page :total="total" :current="pageNo" :page-size="pageSize" @on-change="getRoleItems"></Page>
+                <Page :total="total" :current="pageNo" :page-size="pageSize" @on-change="getItems"></Page>
             </div>
         </div>
     </div>
@@ -33,7 +33,7 @@
       addView, editView
     },
     mounted(){
-      this.getRoleItems(1)
+      this.getItems(1)
     },
     computed: {},
     data () {
@@ -114,13 +114,13 @@
         'queryPage', 'deleteById'
       ]),
       afterEdit(){
-        this.getRoleItems(this.pageNo)
+        this.getItems(this.pageNo)
       },
       afterAdd(){
-        this.getRoleItems(1)
+        this.getItems(1)
       },
-      getRoleItems(pageNo){
-        this.queryPage({bookKey:'roleApi', pageNo}).then(res => {
+      getItems(pageNo){
+        this.queryPage({bookKey:'groupApi', pageNo}).then(res => {
           this.roleItems = res.values.rows
           this.total = res.values.count
         })
@@ -141,12 +141,12 @@
           title: '确认对话框标题',
           content: '<p>是否删除用户' + this.roleItems[index].name + '</p>',
           onOk: async () => {
-            const bookKey = 'roleApi'
+            const bookKey = 'groupApi'
             const id = this.roleItems[index].id
             this.deleteById({bookKey, id}).then((res) => {
               ctx.pageNo = ctx.total <= 1 && ctx.pageNo > 1 ? (ctx.pageNo - 1) : ctx.pageNo
               iView.Message.success(res.message)
-              ctx.getRoleItems(ctx.pageNo)
+              ctx.getItems(ctx.pageNo)
               ctx.roleItems.splice(index, 1)
               const child = ctx.$refs.addModal //获取子组件实例
               child.updateRole()
