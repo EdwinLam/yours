@@ -16,6 +16,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: true
     },
+    headImage: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
     pCode: {
       type: DataTypes.STRING(255),
       allowNull: true

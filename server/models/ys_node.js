@@ -33,7 +33,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     pCode: {
-      type: DataTypes.INTEGER(6),
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     level: {

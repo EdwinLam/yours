@@ -8,6 +8,10 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
+    name: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
     code: {
       type: DataTypes.STRING(255),
       allowNull: true
@@ -16,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: true
     },
-    name: {
+    pName: {
       type: DataTypes.STRING(255),
       allowNull: true
     },

@@ -6,7 +6,7 @@ const uuidv1 = require('uuid/v1')
 
 class RoleService extends BaseService {
   constructor () {
-    super('ys_access')
+    super('ys_node')
   }
 
   /**
@@ -15,7 +15,7 @@ class RoleService extends BaseService {
    * @param {String} pName 父分组名称
    * @param {name} password 角色名称
    */
-  async createGroup (ctx) {
+  async create (ctx) {
     const pCode = ctx.request.body.pCode
     const pName = ctx.request.body.pName
     const name = ctx.request.body.name
@@ -45,7 +45,7 @@ class RoleService extends BaseService {
    * @param {Number} id 唯一id
    * @param {String} name 用户名
    */
-  async updateGroup (ctx) {
+  async update (ctx) {
     const name = ctx.request.body.name
     const id = ctx.params.id
     const updatedAt = new Date().getTime()
