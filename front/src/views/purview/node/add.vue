@@ -3,7 +3,7 @@
         <Modal v-model="isShowModal" title="新增" @on-cancel="cancel" ok-text="新增">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
                 <FormItem label="节点类型">
-                    <Select placeholder="请选择" v-model="selectLevel">
+                    <Select placeholder="请选择" v-model="selectLevel" @on-change="onChange">
                         <Option value="1">模块</Option>
                         <Option value="2">功能</Option>
                         <Option value="3">操作</Option>
@@ -13,10 +13,10 @@
                     <Input v-model="formValidate.name" placeholder="请输入名称" :disabled="loading"></Input>
                 </Form-item>
                 <FormItem label="功能标志">
-                    <Input v-model="formValidate.flag" placeholder="请输入"></Input>
+                    <Input v-model="formValidate.flag" placeholder="请输入功能标志" :disabled="loading"></Input>
                 </FormItem>
                 <FormItem label="路径">
-                    <Input v-model="formValidate.path" placeholder="请输入"></Input>
+                    <Input v-model="formValidate.path" placeholder="请输入路径" :disabled="loading"></Input>
                 </FormItem>
 
                 <FormItem label="排序">
@@ -79,6 +79,9 @@
       ...mapActions([
         'add', 'custom'
       ]),
+      onChange(){
+        this.updateItems()
+      },
       async updateItems(){
         const ctx = this
         const level = this.selectLevel === "1" || this.selectLevel === "2" ? 1 : 2
@@ -102,10 +105,8 @@
         this.$refs[name].validate(async (valid) => {
           if (valid) {
             this.loading = true
-            const name = this.formValidate.name
-            const pCode = this.selectedRoles.length ? this.selectedRoles[this.selectedRoles.length - 1] : 0
-            const pName = ''
-            ctx.add({bookKey: 'nodeApi', data: {name, pCode, pName}}).then(res => {
+            this.formValidate.pCode = this.selectedRoles.length ? this.selectedRoles[this.selectedRoles.length - 1] : 0
+            ctx.add({bookKey: 'nodeApi', data: this.formValidate}).then(res => {
               this.$emit('input', false)
               this.$emit('afterAdd')
               this.loading = false
