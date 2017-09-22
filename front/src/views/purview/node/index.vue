@@ -11,6 +11,7 @@
                 新增
             </Button>
         </div>
+
         <addView v-model="isShowAdd" @afterAdd="afterAdd" ref="addModal" />
         <!--<editView v-model="isShowEdit" :userItem="curRoleItem" @afterEdit="afterEdit"/>-->
         <Table :data="roleItems" :columns="userColumns" stripe></Table>
@@ -48,7 +49,8 @@
         userColumns: [
           {
             title: '名称',
-            key: 'name'
+            key: 'name',
+            fixed: 'left'
           },
           {
             title: '创建时间',
@@ -61,6 +63,7 @@
             title: '操作',
             key: 'action',
             width: 200,
+            fixed: 'right',
             align: 'center',
             render: (h, params) => {
               return h('div', [

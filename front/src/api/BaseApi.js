@@ -8,7 +8,6 @@ export default class BaseApi {
   }
 
   queryPage ({pageNo, pageSize}) {
-    console.log(this)
     const ctx = this
     const data = {
       pageNo,
@@ -28,10 +27,12 @@ export default class BaseApi {
     })
   }
 
-  queryTree() {
+  queryTree(data) {
+    console.log(data)
     return fetch({
       url: '/api/'+ this.key + '/queryTree',
-      method: 'get'
+      method: 'get',
+      params:data
     })
   }
 }

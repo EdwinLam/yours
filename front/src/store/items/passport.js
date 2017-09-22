@@ -61,7 +61,7 @@ export function getPassport(auth) {
     {code:5,name:'分组管理',path:'/purview/group',sort:4,pCode:2,level:2},
     {code:3,name:'用户管理',path:'/purview/user',sort:1,pCode:2,level:2},
     {code:3,name:'角色管理',path:'/purview/role',sort:2,pCode:2,level:2},
-    {code:4,name:'功能管理',path:'/purview/function',sort:3,pCode:2,level:2}
+    {code:4,name:'节点管理',path:'/purview/node',sort:3,pCode:2,level:2}
   ]
   const passport = parsePassport(auth,1)
   return passport

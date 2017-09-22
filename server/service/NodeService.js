@@ -1,41 +1,30 @@
 const BaseService = require('./BaseService')
 const StringUtil = require('../util/StringUtil.js')
 const SystemUtil = require('../util/SystemUtil.js')
-const _ = require('lodash');
-const uuidv1 = require('uuid/v1')
 
-class RoleService extends BaseService {
+class NodeService extends BaseService {
   constructor () {
     super('ys_node')
   }
 
   /**
-   * 新建分组
+   * 新建
    * @param {String} pCode 父分组Code 根目录为0
    * @param {String} pName 父分组名称
    * @param {name} password 角色名称
    */
   async create (ctx) {
     const pCode = ctx.request.body.pCode
-    const pName = ctx.request.body.pName
     const name = ctx.request.body.name
-    if (StringUtil.someNull([name])) {
-      ctx.body = SystemUtil.createResult({success: false, message: '角色名不能为空'})
+    if (StringUtil.isNull(name)) {
+      ctx.body = SystemUtil.createResult({success: false, message: '名称不能为空'})
     }
-    const roleInfo = await this.Dao.findOne({where: {pCode,name}})
-    const isExistsRole = roleInfo != null
-    if (!isExistsRole) {
-      const message = '新建分组' + name + '成功'
-      const createdAt = new Date().getTime()
-      const updatedAt = new Date().getTime()
-      const status = 1
-      const code = uuidv1()
-      const value = await this.Dao.create({
-        pCode,pName,name,createdAt,updatedAt,status,code
-      })
-      ctx.body = SystemUtil.createResult({success: true, message: message, values: value})
+    const item = await this.Dao.findOne({where: {pCode,name}})
+    const isExists = item != null
+    if (!isExists) {
+      ctx.body =await this.baseCreate(ctx.request.body)
     } else {
-      const message = pName+'已存在' + name + '分组'
+      const message ='该节点下已存在' + name + '的节点'
       ctx.body = SystemUtil.createResult({success: false, message: message})
     }
   }
@@ -56,4 +45,4 @@ class RoleService extends BaseService {
     ctx.body = SystemUtil.createResult({success: true, message: '更新成功'})
   }
 }
-module.exports = new RoleService()
+module.exports = new NodeService()

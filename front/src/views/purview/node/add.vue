@@ -1,18 +1,39 @@
 <template>
     <div>
-        <Modal v-model="isShowModal" title="新建功能" @on-cancel="cancel" ok-text="新建">
+        <Modal v-model="isShowModal" title="新增" @on-cancel="cancel" ok-text="新增">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
+                <FormItem label="节点类型">
+                    <Select placeholder="请选择" v-model="selectLevel">
+                        <Option value="1">模块</Option>
+                        <Option value="2">功能</Option>
+                        <Option value="3">操作</Option>
+                    </Select>
+                </FormItem>
                 <Form-item label="名称" prop="name">
                     <Input v-model="formValidate.name" placeholder="请输入名称" :disabled="loading"></Input>
                 </Form-item>
-                <Form-item label="所属功能">
-                    <Cascader :data="baseData" v-model="selectedRoles" change-on-select @on-change="onchange"
-                              not-found-text="暂无分组信息" ref="CascaderArea"></Cascader>
+                <FormItem label="功能标志">
+                    <Input v-model="formValidate.flag" placeholder="请输入"></Input>
+                </FormItem>
+                <FormItem label="路径">
+                    <Input v-model="formValidate.path" placeholder="请输入"></Input>
+                </FormItem>
+
+                <FormItem label="排序">
+                    <InputNumber v-model="formValidate.sort" :min="1"></InputNumber>
+                </FormItem>
+
+                <Form-item label="所属节点">
+                    <Cascader :data="baseData" v-model="selectedRoles" change-on-select ref="CascaderArea"></Cascader>
                 </Form-item>
+                <FormItem label="备注">
+                    <Input v-model="formValidate.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
+                           placeholder="请输入..."></Input>
+                </FormItem>
             </Form>
             <div slot="footer">
                 <Button type="ghost" size="large" @click="cancel">取消</Button>
-                <Button type="primary" size="large" :loading="loading" @click="ok">新建分组</Button>
+                <Button type="primary" size="large" :loading="loading" @click="ok">新增</Button>
             </div>
         </Modal>
     </div>
@@ -31,16 +52,20 @@
       }
     },
     mounted () {
-
-      this.updateRole()
+      this.updateItems()
     },
     data () {
       return {
+        selectLevel: "1",
         selectedRoles: [],
         baseData: [],
         loading: false,
         formValidate: {
           name: '',
+          flag: '',
+          path: '',
+          sort: 1,
+          remark:''
         },
         ruleValidate: {
           name: [
@@ -54,12 +79,10 @@
       ...mapActions([
         'add', 'custom'
       ]),
-      onchange(value, selectedData){
-
-      },
-      async updateRole(){
+      async updateItems(){
         const ctx = this
-        const res = await this.custom({bookKey: 'nodeApi', method: 'queryTree'})
+        const level = this.selectLevel === "1" || this.selectLevel === "2" ? 1 : 2
+        const res = await this.custom({bookKey: 'nodeApi', method: 'queryTree',data:{level: level}})
         this.baseData = res.values
         if (res.values.length)
           this.selectedRoles = [res.values[0].value]
@@ -80,7 +103,7 @@
           if (valid) {
             this.loading = true
             const name = this.formValidate.name
-            const pCode =this.selectedRoles.length? this.selectedRoles[this.selectedRoles.length - 1] : 0
+            const pCode = this.selectedRoles.length ? this.selectedRoles[this.selectedRoles.length - 1] : 0
             const pName = ''
             ctx.add({bookKey: 'nodeApi', data: {name, pCode, pName}}).then(res => {
               this.$emit('input', false)
@@ -88,7 +111,7 @@
               this.loading = false
               this.handleReset("formValidate")
               iView.Message.success(res.message)
-              ctx.updateRole()
+              ctx.updateItems()
             })
           } else {
             this.$Message.error('表单验证失败!');

@@ -1,6 +1,7 @@
 const DBUtil = require('../util/DBUtil')
 const SystemUtil = require('../util/SystemUtil.js')
 const _ = require('lodash')
+const uuidv1 = require('uuid/v1')
 
 class BaseService {
   constructor (path) {
@@ -25,6 +26,7 @@ class BaseService {
     result.pageSize = pageSize
     ctx.body = SystemUtil.createResult({success: true, message: '成功获取', values: result})
   }
+
   /*
    * 删除
    * @param {Number} id 唯一id
@@ -37,11 +39,28 @@ class BaseService {
   }
 
   /*
+   * 公用新增
+   * @param {Object} data 新增的数据
+   */
+  async baseCreate(data){
+    const message = '新增成功'
+    data.createdAt = new Date().getTime()
+    data.updatedAt = new Date().getTime()
+    data.status = 1
+    data.code = uuidv1()
+    const value = await this.Dao.create(data)
+    return SystemUtil.createResult({success: true, message: message, values: value})
+  }
+
+  /*
    * 获取树状结构
    * @param {Number} id 唯一id
    */
   async queryTree(ctx){
-    let result = await this.Dao.findAll()
+    console.log(ctx.query)
+    let result = await this.Dao.findAll({
+      where: ctx.query
+    })
     let hash = {}
     let filterSourceData = []
     let list = []

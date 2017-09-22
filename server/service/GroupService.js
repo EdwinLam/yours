@@ -1,7 +1,6 @@
 const BaseService = require('./BaseService')
 const StringUtil = require('../util/StringUtil.js')
 const SystemUtil = require('../util/SystemUtil.js')
-const _ = require('lodash');
 const uuidv1 = require('uuid/v1')
 
 class RoleService extends BaseService {
