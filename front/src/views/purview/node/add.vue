@@ -24,7 +24,7 @@
                 </FormItem>
 
                 <Form-item label="所属节点">
-                    <Cascader :data="baseData" v-model="selectedRoles" change-on-select ref="CascaderArea"></Cascader>
+                    <Cascader :data="baseData" v-model="selectedRoles" change-on-select=true ref="CascaderArea"></Cascader>
                 </Form-item>
                 <FormItem label="备注">
                     <Input v-model="formValidate.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
@@ -53,9 +53,12 @@
     },
     mounted () {
       this.updateItems()
+//      this.onChange = this.onChange.bind(this)
+
     },
     data () {
       return {
+        changeOnSelect:true,
         selectLevel: "1",
         selectedRoles: [],
         baseData: [],
@@ -80,15 +83,38 @@
         'add', 'custom'
       ]),
       onChange(){
-        this.updateItems()
+        console.log(this.selectLevel === '1' || this.selectLevel === '2')
+        if(this.selectLevel === '1' || this.selectLevel === '2') {
+          this.changeOnSelect = true
+          this.setDisable(this.baseData, [false, true, true])
+        }else{
+          this.changeOnSelect = false
+          this.setDisable(this.baseData,[true,false,true])
+        }
+      },
+      setDisable(data,disable){
+        const ctx = this
+        data.forEach(function(el){
+          el.disabled = disable[el.level-1]
+          if(el.children)
+            ctx.setDisable(el.children,disable)
+        })
       },
       async updateItems(){
         const ctx = this
-        const level = this.selectLevel === "1" || this.selectLevel === "2" ? 1 : 2
-        const res = await this.custom({bookKey: 'nodeApi', method: 'queryTree',data:{level: level}})
+//        const level = this.selectLevel === "1" || this.selectLevel === "2" ? 1 : 2
+        const res = await this.custom({bookKey: 'nodeApi', method: 'queryTree'})
         this.baseData = res.values
-        if (res.values.length)
-          this.selectedRoles = [res.values[0].value]
+        if ( this.baseData.length)
+          this.selectedRoles = [ this.baseData[0].value]
+        if(this.selectLevel === '1' || this.selectLevel === '2') {
+          this.changeOnSelect = true
+          this.setDisable(this.baseData, [false, true, true])
+        }else{
+          this.changeOnSelect = false
+          this.setDisable(this.baseData,[true,false,true])
+        }
+
         setTimeout(function () {
           ctx.$refs.CascaderArea.updateSelected(true)
         }, 100)

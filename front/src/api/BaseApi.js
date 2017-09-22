@@ -28,7 +28,6 @@ export default class BaseApi {
   }
 
   queryTree(data) {
-    console.log(data)
     return fetch({
       url: '/api/'+ this.key + '/queryTree',
       method: 'get',

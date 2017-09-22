@@ -57,7 +57,6 @@ class BaseService {
    * @param {Number} id 唯一id
    */
   async queryTree(ctx){
-    console.log(ctx.query)
     let result = await this.Dao.findAll({
       where: ctx.query
     })
@@ -67,7 +66,7 @@ class BaseService {
     result.forEach(function(item){
       let el = item.dataValues
       el.children = []
-      el=_.merge({expand:true,selected:false,title:el.name,value:el.code,label:el.name},el)
+      el=_.merge({expand:true,selected:false,title:el.name,value:el.code,label:el.name,disabled:false},el)
       filterSourceData.push(el)
       hash[el.code] = el
     })
