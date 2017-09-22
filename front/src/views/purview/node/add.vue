@@ -2,7 +2,7 @@
     <div>
         <Modal v-model="isShowModal" title="新增" @on-cancel="cancel" ok-text="新增">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-                <FormItem label="节点类型">
+                <FormItem label=" 节点类型">
                     <Select placeholder="请选择" v-model="selectLevel" @on-change="onChange">
                         <Option value="1">模块</Option>
                         <Option value="2">功能</Option>
@@ -24,7 +24,7 @@
                 </FormItem>
 
                 <Form-item label="所属节点">
-                    <Cascader :data="baseData" v-model="selectedRoles" change-on-select=true ref="CascaderArea"></Cascader>
+                    <Cascader :data="baseData" v-model="selectedRoles" change-on-select ref="CascaderArea"></Cascader>
                 </Form-item>
                 <FormItem label="备注">
                     <Input v-model="formValidate.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
