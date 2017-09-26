@@ -6,7 +6,7 @@
 <template>
     <div>
         <div class="op-btn-menu">
-            <Button type="ghost" @click="isShowAdd=true">
+            <Button type="ghost" @click="openAdd()">
                 <Icon type="plus"></Icon>
                 新增
             </Button>
@@ -116,6 +116,11 @@
       ...mapActions([
         'queryPage', 'deleteById'
       ]),
+      openAdd(){
+        this.isShowAdd=true
+        this.$refs.addModal.handleReset()
+        this.$refs.addModal.updateItems()
+      },
       afterEdit(){
         this.getItems(this.pageNo)
       },
@@ -152,7 +157,7 @@
               ctx.getItems(ctx.pageNo)
               ctx.roleItems.splice(index, 1)
               const child = ctx.$refs.addModal //获取子组件实例
-              child.updateRole()
+              child.updateItems()
             })
           }
         })

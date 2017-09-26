@@ -3,7 +3,7 @@
         <Modal v-model="isShowModal" title="新增" @on-cancel="cancel" ok-text="新增">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
                 <FormItem label=" 节点类型" prop="level">
-                    <Select placeholder="请选择" v-model.number="formValidate.level" @on-change="onChange" number>
+                    <Select placeholder="请选择" v-model.number="formValidate.level" @on-change="onChange" transfer>
                         <Option :value="1">模块</Option>
                         <Option :value="2">功能</Option>
                         <Option :value="3">操作</Option>
@@ -12,19 +12,19 @@
                 <Form-item label="名称" prop="name">
                     <Input v-model="formValidate.name" placeholder="请输入名称" :disabled="loading"></Input>
                 </Form-item>
-                <FormItem label="标志">
+                <FormItem label="标志" prop="flag">
                     <Input v-model="formValidate.flag" placeholder="请输入功能标志" :disabled="loading"></Input>
                 </FormItem>
-                <FormItem label="路径">
+                <FormItem label="路径"  prop="path">
                     <Input v-model="formValidate.path" placeholder="请输入路径" :disabled="loading"></Input>
                 </FormItem>
-                <FormItem label="排序">
+                <FormItem label="排序"  prop="sort">
                     <InputNumber v-model.number="formValidate.sort" :min="1"></InputNumber>
                 </FormItem>
                 <Form-item label="所属节点" prop="nodes">
-                    <Cascader :data="baseData" v-model="formValidate.nodes" change-on-select ref="CascaderArea"></Cascader>
+                    <Cascader :data="baseData" v-model="formValidate.nodes" change-on-select ref="CascaderArea" placeholder="根节点"></Cascader>
                 </Form-item>
-                <FormItem label="备注">
+                <FormItem label="备注" prop="remark">
                     <Input v-model="formValidate.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
                            placeholder="请输入..."></Input>
                 </FormItem>
@@ -59,6 +59,9 @@
       const validateNode  =  (rule, value, callback) => {
         let isSuccess = false
         let errorMessage = ''
+        if(!this.formValidate.nodes.length){
+          return callback()
+        }
        if(ctx.formValidate.level ===1){
          isSuccess = value.length&&ctx.nodeHash[value[value.length-1]].level ===1
          errorMessage = !isSuccess ? '只能在[模块]节点下创建[模块]' : ''
@@ -72,7 +75,6 @@
        return isSuccess?callback():callback(new Error(errorMessage))
       }
       return {
-
         baseData: [],
         loading: false,
         nodeHash:{},
@@ -110,28 +112,26 @@
       ...mapActions([
         'add', 'custom'
       ]),
-      onChange(value,selectedData){
+      onChange(){
+        this.$refs['formValidate'].validate()
       },
       setHashAll(data){
         const ctx = this
         data.forEach(function(el){
           let levelName = el.level === 1 ? '模块' : el.level === 2 ? '功能' : el.level === 3 ? '操作' : '???'
           el.label = el.label+'['+ levelName +']'
+          el.disabled = el.level === 3
           ctx.nodeHash[el.code] = el
           if(el.children)
             ctx.setHashAll(el.children)
         })
       },
       async updateItems(){
-        const ctx = this
         const res = await this.custom({bookKey: 'nodeApi', method: 'queryTree'})
-        ctx.baseData = res.values
-        if ( ctx.baseData.length)
-          this.formValidate.nodes = [ ctx.baseData[0].value]
-        ctx.setHashAll(ctx.baseData)
-        setTimeout(function () {
-          ctx.$refs.CascaderArea.updateSelected(true)
-        }, 100)
+        this.baseData = res.values
+        this.formValidate.nodes = []
+        this.setHashAll(this.baseData)
+
       },
       ok () {
         this.handleSubmit("formValidate")
@@ -145,12 +145,12 @@
         this.$refs[name].validate(async (valid) => {
           if (valid) {
             this.loading = true
-            this.formValidate.pCode = this.nodes.length ? this.nodes[this.nodes.length - 1] : 0
+            this.formValidate.pCode = this.formValidate.nodes.length ? this.formValidate.nodes[this.formValidate.nodes.length - 1] : 0
             ctx.add({bookKey: 'nodeApi', data: this.formValidate}).then(res => {
               this.$emit('input', false)
               this.$emit('afterAdd')
               this.loading = false
-              this.handleReset("formValidate")
+              this.handleReset()
               iView.Message.success(res.message)
               ctx.updateItems()
             })
@@ -159,8 +159,8 @@
           }
         })
       },
-      handleReset (name) {
-        this.$refs[name].resetFields();
+      handleReset () {
+        this.$refs['formValidate'].resetFields();
       }
     }
   }
