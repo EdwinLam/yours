@@ -60,7 +60,7 @@
           {
             title: '操作',
             key: 'action',
-            width: 200,
+            width: 300,
             align: 'center',
             render: (h, params) => {
               return h('div', [
@@ -92,6 +92,20 @@
                     }
                   }
                 }, '修改'),
+                h('Button', {
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.editInit(params.index)
+                    }
+                  }
+                }, '权限分配'),
                 h('Button', {
                   props: {
                     type: 'error',

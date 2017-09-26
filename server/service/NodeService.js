@@ -44,5 +44,22 @@ class NodeService extends BaseService {
     await this.Dao.update({name,updatedAt}, {where: {id}})
     ctx.body = SystemUtil.createResult({success: true, message: '更新成功'})
   }
+
+  /*
+   * 获取指定code角色的节点权限(根角色默认所有节点可选)
+   * @param {code} 角色code
+   */
+  async getCanSelectNodes (ctx) {
+    const code = ctx.request.body.code
+    if (StringUtil.isNull(code)) {
+      ctx.body = SystemUtil.createResult({success: false, message: 'code不能为空'})
+    }
+    let where = null
+    if(code != 0) {
+      where={code:code}
+    }
+    await this.Dao.findAndCount({where})
+    ctx.body = SystemUtil.createResult({success: true, message: '更新成功'})
+  }
 }
 module.exports = new NodeService()

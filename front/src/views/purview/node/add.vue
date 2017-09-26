@@ -9,6 +9,9 @@
                         <Option :value="3">操作</Option>
                     </Select>
                 </FormItem>
+                <Form-item label="所属节点" prop="nodes">
+                    <Cascader :data="baseData" v-model="formValidate.nodes" change-on-select ref="CascaderArea" placeholder="根节点"></Cascader>
+                </Form-item>
                 <Form-item label="名称" prop="name">
                     <Input v-model="formValidate.name" placeholder="请输入名称" :disabled="loading"></Input>
                 </Form-item>
@@ -21,9 +24,6 @@
                 <FormItem label="排序"  prop="sort">
                     <InputNumber v-model.number="formValidate.sort" :min="1"></InputNumber>
                 </FormItem>
-                <Form-item label="所属节点" prop="nodes">
-                    <Cascader :data="baseData" v-model="formValidate.nodes" change-on-select ref="CascaderArea" placeholder="根节点"></Cascader>
-                </Form-item>
                 <FormItem label="备注" prop="remark">
                     <Input v-model="formValidate.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
                            placeholder="请输入..."></Input>
