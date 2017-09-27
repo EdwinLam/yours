@@ -12,17 +12,20 @@
             </Button>
         </div>
         <addView v-model="isShowAdd" @afterAdd="afterAdd" ref="addModal" />
+        <assignmentView v-model="isShowAssignment" ref="assignmentModal" />
+
         <!--<editView v-model="isShowEdit" :userItem="curRoleItem" @afterEdit="afterEdit"/>-->
-        <Table :data="roleItems" :columns="userColumns" stripe></Table>
+        <Table :data="items" :columns="userColumns" stripe></Table>
         <div style="margin: 10px;overflow: hidden">
             <div style="float: right;">
-                <Page :total="total" :current="pageNo" :page-size="pageSize" @on-change="getRoleItems"></Page>
+                <Page :total="total" :current="pageNo" :page-size="pageSize" @on-change="getItems"></Page>
             </div>
         </div>
     </div>
 </template>
 <script>
   import addView from './add.vue'
+  import assignmentView from './assignment.vue'
   import editView from './edit.vue'
   import { mapActions } from 'vuex'
   import { formatDate } from '@/utils/base'
@@ -30,10 +33,10 @@
 
   export default {
     components: {
-      addView, editView
+      addView, editView, assignmentView
     },
     mounted(){
-      this.getRoleItems(1)
+      this.getItems(1)
     },
     computed: {},
     data () {
@@ -41,9 +44,10 @@
         total: 0,
         pageNo: 1,
         pageSize: 10,
-        roleItems: [],
+        items: [],
         curRoleItem: {},
         isShowAdd: false,
+        isShowAssignment: false,
         isShowEdit: false,
         userColumns: [
           {
@@ -54,7 +58,7 @@
             title: '创建时间',
             key: 'createdAt',
             render: (h, params) => {
-              return h('div', formatDate(this.roleItems[params.index].createdAt));
+              return h('div', formatDate(this.items[params.index].createdAt));
             }
           },
           {
@@ -102,7 +106,7 @@
                   },
                   on: {
                     click: () => {
-                      this.editInit(params.index)
+                      this.assignmentInit(params.index)
                     }
                   }
                 }, '权限分配'),
@@ -128,40 +132,45 @@
         'queryPage', 'deleteById'
       ]),
       afterEdit(){
-        this.getRoleItems(this.pageNo)
+        this.getItems(this.pageNo)
       },
       afterAdd(){
-        this.getRoleItems(1)
+        this.getItems(1)
       },
-      getRoleItems(pageNo){
+      getItems(pageNo){
         this.queryPage({bookKey:'roleApi', pageNo}).then(res => {
-          this.roleItems = res.values.rows
+          this.items = res.values.rows
           this.total = res.values.count
         })
       },
+      assignmentInit:function(index){
+        console.log(this.$refs.assignmentModal)
+        this.$refs.assignmentModal.initNode(this.items[index].pcode)
+        this.isShowAssignment = true
+      },
       editInit(index){
-        this.curRoleItem = this.roleItems[index]
+        this.curRoleItem = this.items[index]
         this.isShowEdit = true
       },
       show (index) {
         this.$Modal.info({
           title: '用户信息',
-          content: `姓名：${this.roleItems[index].name}<br>创建日期：${formatDate(this.roleItems[index].createdAt)}`
+          content: `姓名：${this.items[index].name}<br>创建日期：${formatDate(this.items[index].createdAt)}`
         })
       },
       remove (index) {
         const ctx = this
         this.$Modal.confirm({
           title: '确认对话框标题',
-          content: '<p>是否删除用户' + this.roleItems[index].name + '</p>',
+          content: '<p>是否删除用户' + this.items[index].name + '</p>',
           onOk: async () => {
             const bookKey = 'roleApi'
-            const id = this.roleItems[index].id
+            const id = this.items[index].id
             this.deleteById({bookKey, id}).then((res) => {
               ctx.pageNo = ctx.total <= 1 && ctx.pageNo > 1 ? (ctx.pageNo - 1) : ctx.pageNo
               iView.Message.success(res.message)
-              ctx.getRoleItems(ctx.pageNo)
-              ctx.roleItems.splice(index, 1)
+              ctx.getItems(ctx.pageNo)
+              ctx.items.splice(index, 1)
               const child = ctx.$refs.addModal //获取子组件实例
               child.updateRole()
             })

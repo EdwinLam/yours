@@ -29,6 +29,6 @@ router.post('/group/:id', (ctx) => GroupService.update(ctx))
 /* 节点相关接口 */
 router.post('/node/create', (ctx) => NodeService.create(ctx))
 router.post('/node/:id', (ctx) => NodeService.update(ctx))
-router.post('/node/getCanSelectNodes', (ctx) => NodeService.getCanSelectNodes(ctx))//获取角色可以选择的节点
+router.get('/node/getCanSelectNodes', (ctx) => NodeService.getCanSelectNodes(ctx))//获取角色可以选择的节点
 
 module.exports = router

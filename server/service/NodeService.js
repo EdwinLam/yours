@@ -50,7 +50,7 @@ class NodeService extends BaseService {
    * @param {code} 角色code
    */
   async getCanSelectNodes (ctx) {
-    const code = ctx.request.body.code
+    const code = ctx.query.code
     if (StringUtil.isNull(code)) {
       ctx.body = SystemUtil.createResult({success: false, message: 'code不能为空'})
     }
@@ -58,8 +58,8 @@ class NodeService extends BaseService {
     if(code != 0) {
       where={code:code}
     }
-    await this.Dao.findAndCount({where})
-    ctx.body = SystemUtil.createResult({success: true, message: '更新成功'})
+    const result = await this.Dao.findAndCount({where})
+    ctx.body = SystemUtil.createResult({success: true, message: '成功获取', values: result})
   }
 }
 module.exports = new NodeService()
