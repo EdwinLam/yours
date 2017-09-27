@@ -2,9 +2,7 @@
     <div>
         <Modal v-model="isShowModal" title="权限分配" @on-cancel="cancel" ok-text="新建">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-                <Form-item label="名称" prop="name">
-                    <Tree :data="baseData" show-checkbox></Tree>
-                </Form-item>
+                <Tree :data="baseData" show-checkbox></Tree>
             </Form>
             <div slot="footer">
                 <Button type="ghost" size="large" @click="cancel">取消</Button>
@@ -27,7 +25,6 @@
       }
     },
     mounted () {
-      this.updateRole()
     },
     data () {
       return {
@@ -52,9 +49,8 @@
 
       },
       async initNode(code){
-        const res = await this.custom({bookKey: 'nodeApi', method: 'getCanSelectNodes'},code)
-        console.log(res)
-        this.baseData = res.values
+        const res = await this.custom({bookKey: 'nodeApi', method: 'getCanSelectNodes',data:{code}})
+        this.baseData = res.values.rows
       },
       ok () {
         this.handleSubmit("formValidate")
@@ -77,7 +73,6 @@
               this.loading = false
               this.handleReset("formValidate")
               iView.Message.success(res.message)
-              ctx.updateRole()
             })
           } else {
             this.$Message.error('表单验证失败!');

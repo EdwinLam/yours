@@ -145,7 +145,7 @@
       },
       assignmentInit:function(index){
         console.log(this.$refs.assignmentModal)
-        this.$refs.assignmentModal.initNode(this.items[index].pcode)
+        this.$refs.assignmentModal.initNode(this.items[index].pCode)
         this.isShowAssignment = true
       },
       editInit(index){

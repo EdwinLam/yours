@@ -51,6 +51,7 @@ class NodeService extends BaseService {
    */
   async getCanSelectNodes (ctx) {
     const code = ctx.query.code
+    console.log(ctx.query)
     if (StringUtil.isNull(code)) {
       ctx.body = SystemUtil.createResult({success: false, message: 'code不能为空'})
     }

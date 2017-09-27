@@ -23,11 +23,12 @@ export default class GroupApi extends BaseApi{
     })
   }
 
-  getCanSelectNodes(code) {
+  getCanSelectNodes(data) {
+    console.log(data)
     return fetch({
       url: '/api/node/getCanSelectNodes',
       method: 'get',
-      params:{code}
+      params:data
     })
   }
 
